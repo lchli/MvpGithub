@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/stars_count_text_view"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/repo_full_name_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/repo_des_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/repo_update_time_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/stars_count_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/fork_count_text_view"
+        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/fork_count_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:layout_marginLeft="5dp"
+        android:text="TextView" />
+</RelativeLayout>

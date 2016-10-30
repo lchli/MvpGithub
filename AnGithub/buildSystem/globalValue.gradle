@@ -1,0 +1,14 @@
+ext{
+    compileSdkVersion=24
+    buildToolsVersion='24.0.0'
+    minSdkVersion=14
+    targetSdkVersion=24
+
+    versionCode=1
+    versionName="1.0"
+
+    javaVersion=JavaVersion.VERSION_1_7
+
+
+
+}

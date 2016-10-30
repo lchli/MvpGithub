@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:id="@+id/sort_field_radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/sort_field_star_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sort_field_stars" />
+
+        <RadioButton
+            android:id="@+id/sort_field_forks_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sort_field_forks" />
+
+        <RadioButton
+            android:id="@+id/sort_field_update_time_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sort_field_updated" />
+
+        <RadioButton
+            android:id="@+id/sort_field_default_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sort_field_default" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/sort_order_radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/sort_order_asc_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#3F51B5"
+            android:text="@string/sort_order_asc" />
+
+        <RadioButton
+            android:id="@+id/sort_order_desc_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#3F51B5"
+            android:text="@string/sort_order_desc" />
+    </RadioGroup>
+</LinearLayout>

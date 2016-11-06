@@ -18,7 +18,7 @@ public class PreferenceUtil {
         SharedPreferences pref = getPref();
         Editor ed = pref.edit();
         ed.putInt(key, value);
-        ed.commit();
+        ed.apply();
     }
 
     public static int getInt(String key, int defValue) {
@@ -30,7 +30,7 @@ public class PreferenceUtil {
         SharedPreferences pref = getPref();
         Editor ed = pref.edit();
         ed.putString(key, value);
-        ed.commit();
+        ed.apply();
     }
 
     public static String getString(String key, String defValue) {
@@ -42,7 +42,7 @@ public class PreferenceUtil {
         SharedPreferences pref = getPref();
         Editor ed = pref.edit();
         ed.putBoolean(key, value);
-        ed.commit();
+        ed.apply();
     }
 
     public static boolean getBool(String key, boolean defValue) {
@@ -54,7 +54,7 @@ public class PreferenceUtil {
         SharedPreferences pref = getPref();
         Editor ed = pref.edit();
         ed.putLong(key, value);
-        ed.commit();
+        ed.apply();
     }
 
     public static long getLong(String key, long defValue) {

@@ -1,9 +1,12 @@
 package com.lchli.angithub.common.netApi;
 
 
+import com.lchli.angithub.common.netApi.interceptor.CommonParamsInterceptor;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * Created by lchli on 2016/10/10.
@@ -16,10 +19,17 @@ public final class OKClientProvider {
     private static final int WRITE_TIME_OUT = 30;
 
     public static OkHttpClient.Builder getHttpClientBuilder() {
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
         return new OkHttpClient.Builder()
                 .connectTimeout(CONNECT_TIME_OUT, TimeUnit.SECONDS)
                 .readTimeout(READ_TIME_OUT, TimeUnit.SECONDS)
-                .writeTimeout(WRITE_TIME_OUT, TimeUnit.SECONDS);
+                .writeTimeout(WRITE_TIME_OUT, TimeUnit.SECONDS)
+                .addInterceptor(new CommonParamsInterceptor())
+                .addInterceptor(logging)
+                ;
     }
 
     public static OkHttpClient.Builder getSSLClientBuilder() {

@@ -1,4 +1,4 @@
-package com.lchli.angithub.common.config;
+package com.lchli.angithub.common.appEnv;
 
 
 import com.lchli.angithub.BuildConfig;

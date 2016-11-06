@@ -1,4 +1,4 @@
-package com.lchli.angithub.features.search;
+package com.lchli.angithub.features.search.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.lchli.angithub.R;
 import com.lchli.angithub.common.base.AbsAdapter;
-import com.lchli.angithub.features.bean.ReposResponse;
+import com.lchli.angithub.features.search.bean.ReposResponse;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

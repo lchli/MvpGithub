@@ -64,4 +64,7 @@ dependencies {
     compile domainDependencies."commons-lang3"
     compile domainDependencies."commons-io"
     compile domainDependencies."pullRefresh"
+    compile domainDependencies."logging-interceptor"
+    compile domainDependencies."eventbus"
+    compile domainDependencies."glide"
 }

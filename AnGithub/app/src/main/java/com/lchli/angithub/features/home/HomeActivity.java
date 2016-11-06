@@ -1,14 +1,11 @@
 package com.lchli.angithub.features.home;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,16 +13,16 @@ import android.widget.RelativeLayout;
 
 import com.lchli.angithub.Navigator;
 import com.lchli.angithub.R;
+import com.lchli.angithub.common.base.BaseAppCompatActivity;
 import com.lchli.angithub.common.base.FragmentAdapter;
 import com.lchli.angithub.features.events.EventsFragment;
-import com.lchli.angithub.features.me.MeFragment;
+import com.lchli.angithub.features.me.views.MeFragment;
 import com.lchli.angithub.features.repo.RepoFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class HomeActivity extends BaseAppCompatActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -35,10 +32,7 @@ public class HomeActivity extends AppCompatActivity
     TabLayout tabs;
     @BindView(R.id.content_home)
     RelativeLayout contentHome;
-    @BindView(R.id.nav_view)
-    NavigationView navView;
-    @BindView(R.id.drawer_layout)
-    DrawerLayout drawerLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +41,6 @@ public class HomeActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.setDrawerListener(toggle);
-        toggle.syncState();
-
-        navView.setNavigationItemSelectedListener(this);
 
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
         adapter.addFragment(Fragment.instantiate(this, EventsFragment.class.getName()), "event");
@@ -64,15 +51,6 @@ public class HomeActivity extends AppCompatActivity
         tabs.setupWithViewPager(viewpager);
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -84,35 +62,30 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_search) {
-            Navigator.toSearch(this);
+            showSearchChoiceDialog();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
+    private void showSearchChoiceDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setItems(R.array.search_types, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                Navigator.toSearchRepo(activity());
+                                break;
+                            case 1:
+                                break;
+                        }
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+                    }
+                })
+                .create();
+        dialog.show();
     }
+
 }

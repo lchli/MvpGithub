@@ -1,4 +1,4 @@
-package com.lchli.angithub.features.bean;
+package com.lchli.angithub.features.search.bean;
 
 import com.google.gson.annotations.SerializedName;
 

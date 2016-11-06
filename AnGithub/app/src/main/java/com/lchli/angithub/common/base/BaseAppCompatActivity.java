@@ -8,7 +8,20 @@ import android.support.v7.app.AppCompatActivity;
  */
 public class BaseAppCompatActivity extends AppCompatActivity {
 
-    protected Activity activity() {
-        return this;
-    }
+  @Override
+  public void finish() {
+    cleanup();
+    super.finish();
+  }
+
+  protected Activity activity() {
+    return this;
+  }
+
+  /**
+   * this is called when finish.
+   */
+  protected void cleanup() {
+
+  }
 }

@@ -2,7 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lchli.angithub">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:name=".GithubApp"
@@ -22,11 +27,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".features.search.SearchActivity"
+            android:name=".features.search.view.SearchActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            />
-
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:theme="@style/AppTheme.NoActionBar"
+            android:name=".features.me.views.LoginActivity"
+            android:label="@string/title_activity_login" />
     </application>
 
 </manifest>

@@ -1,13 +1,103 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<com.handmark.pulltorefresh.library.PullToRefreshScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/pull_refresh_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.lchli.angithub.features.me.MeFragment">
+    app:ptrMode="pullFromStart">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:background="#fff">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="#28b4a9"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/user_portrait"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/ic_menu_camera"
+
+
+                    />
+
+                <TextView
+                    android:id="@+id/user_nick"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="昵称"
+                    android:textColor="#fff"
+                    android:textSize="16dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/repositories_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/ic_menu_camera"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/indicator_arrow"
+                android:text="repositories" />
+
+            <TextView
+                android:id="@+id/stars_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/ic_menu_camera"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/indicator_arrow"
+                android:text="stars" />
+
+            <TextView
+                android:id="@+id/followers_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/ic_menu_camera"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/indicator_arrow"
+                android:text="followers" />
+
+            <TextView
+                android:id="@+id/following_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/ic_menu_camera"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/indicator_arrow"
+                android:text="following" />
+
+            <Button
+                android:id="@+id/logout_widget"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="退出登录"
+
+                />
+
+
+        </LinearLayout>
+
+        <com.lchli.angithub.common.widget.CommonEmptyView
+            android:id="@+id/empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+</com.handmark.pulltorefresh.library.PullToRefreshScrollView>

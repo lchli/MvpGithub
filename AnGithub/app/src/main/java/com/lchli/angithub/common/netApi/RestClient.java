@@ -1,6 +1,6 @@
 package com.lchli.angithub.common.netApi;
 
-import com.lchli.angithub.common.appEnv.AppEnvironmentFactory;
+import com.lchli.angithub.common.constants.Urlconst;
 import com.lchli.angithub.common.utils.Preconditions;
 
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class RestClient {
         .addInterceptor(hostSelectionInterceptor)
         .build();
     retrofit = new Retrofit.Builder()
-        .baseUrl(HttpUrl.parse(AppEnvironmentFactory.getEnv().getIP()))
+        .baseUrl(HttpUrl.parse(Urlconst.Github.HOST))
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
         .callFactory(okHttpClient)

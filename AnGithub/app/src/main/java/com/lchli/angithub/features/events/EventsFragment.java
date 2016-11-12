@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lchli.angithub.R;
+import com.lchli.angithub.common.base.BaseFragment;
+import com.lchli.angithub.common.utils.ToastUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,7 +18,7 @@ import com.lchli.angithub.R;
  * {@link EventsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class EventsFragment extends Fragment {
+public class EventsFragment extends BaseFragment {
 
     private OnFragmentInteractionListener mListener;
 
@@ -48,6 +50,12 @@ public class EventsFragment extends Fragment {
 //            throw new RuntimeException(context.toString()
 //                    + " must implement OnFragmentInteractionListener");
 //        }
+    }
+
+    @Override
+    public void initLoadData() {
+        isInitLoadDataCalled=true;
+        ToastUtils.systemToast("loading events.");
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.lchli.angithub.common.netApi.apiService;
 
+import com.lchli.angithub.common.constants.Urlconst;
 import com.lchli.angithub.features.me.bean.AuthPostParam;
 import com.lchli.angithub.features.me.bean.AuthResponse;
 import com.lchli.angithub.features.me.bean.CurrentUserInfoResponse;
@@ -21,13 +22,13 @@ import rx.Observable;
 
 public interface GithubRepository {
 
-  @GET("/search/repositories")
+  @GET(Urlconst.Github.PATH_SEARCH_REPOSITORIES)
   Observable<ReposResponse> searchRepo(@QueryMap Map<String, String> params);
 
-  @POST("/authorizations")
+  @POST(Urlconst.Github.PATH_AUTHORIZATIONS)
   Observable<AuthResponse> authorize(@Body AuthPostParam authPostParam,
-                               @Header("Authorization") String basicAuth);
+      @Header("Authorization") String basicAuth);
 
-  @GET("/user")
+  @GET(Urlconst.Github.PATH_USER)
   Observable<CurrentUserInfoResponse> getCurrentUserInfo(@Query("access_token") String token);
 }

@@ -1,15 +1,15 @@
 package com.lchli.angithub.features.me.bean;
 
 import com.google.gson.annotations.SerializedName;
+import com.lchli.angithub.common.base.BaseGithubResponse;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by lchli on 2016/11/1.
  */
 
-public class AuthResponse implements Serializable{
+public class AuthResponse extends BaseGithubResponse {
 
 
     /**
@@ -37,6 +37,7 @@ public class AuthResponse implements Serializable{
     public String tokenLastEight;
     @SerializedName("hashed_token")
     public String hashedToken;
+    public String userAccount;
     /**
      * url : http://my-github-app.com
      * name : my github app

@@ -43,7 +43,7 @@ public class UserController {
     mCompositeSubscription = new CompositeSubscription();
   }
 
-  public void login(String userName, String password) {
+  public void login(final String userName, String password) {
 
     String userCredentials = userName + ":" + password;
     String basicAuth =
@@ -64,9 +64,17 @@ public class UserController {
             if (authResponse == null || authResponse.token == null) {
               return null;
             }
-            LogUtils.e("token:" + authResponse.token);
             UserAccountRepository.get().saveAccount(authResponse);
             return repo.getCurrentUserInfo(authResponse.token);
+          }
+        })
+        .map(new Func1<CurrentUserInfoResponse, CurrentUserInfoResponse>() {
+          @Override
+          public CurrentUserInfoResponse call(CurrentUserInfoResponse userInfoResponse) {
+            if (userInfoResponse != null) {
+              UserAccountRepository.get().saveUserInfo(userInfoResponse);
+            }
+            return userInfoResponse;
           }
         })
         .subscribeOn(Schedulers.io())
@@ -102,12 +110,22 @@ public class UserController {
       @Override
       public Observable<CurrentUserInfoResponse> call(AuthResponse authResponse) {
         if (authResponse == null) {
-          return null;
+          return Observable.just(null);
         }
         return RestClient.instance().createService(GithubRepository.class)
             .getCurrentUserInfo(authResponse.token);
       }
-    }).subscribeOn(Schedulers.io())
+    })
+        .map(new Func1<CurrentUserInfoResponse, CurrentUserInfoResponse>() {
+          @Override
+          public CurrentUserInfoResponse call(CurrentUserInfoResponse userInfoResponse) {
+            if (userInfoResponse != null) {
+              UserAccountRepository.get().saveUserInfo(userInfoResponse);
+            }
+            return userInfoResponse;
+          }
+        })
+        .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Observer<CurrentUserInfoResponse>() {
           @Override

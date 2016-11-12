@@ -1,6 +1,7 @@
 package com.lchli.angithub.features.search.bean;
 
 import com.google.gson.annotations.SerializedName;
+import com.lchli.angithub.common.base.BaseGithubResponse;
 
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  * Created by lchli on 2016/10/29.
  */
 
-public class ReposResponse {
+public class ReposResponse extends BaseGithubResponse {
 
 
     /**

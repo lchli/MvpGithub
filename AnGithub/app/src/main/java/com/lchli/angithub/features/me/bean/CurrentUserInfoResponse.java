@@ -1,12 +1,13 @@
 package com.lchli.angithub.features.me.bean;
 
 import com.google.gson.annotations.SerializedName;
+import com.lchli.angithub.common.base.BaseGithubResponse;
 
 /**
  * Created by lchli on 2016/11/2.
  */
 
-public class CurrentUserInfoResponse {
+public class CurrentUserInfoResponse extends BaseGithubResponse {
 
 
     /**

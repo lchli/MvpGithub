@@ -7,9 +7,9 @@ import android.support.v4.app.Fragment;
  */
 public abstract class BaseFragment extends Fragment {
 
-    public boolean isInitLoadDataCalled=false;
+  public boolean isInitLoadDataCalled = false;
 
-    public void initLoadData() {
-        //def impl.
-    }
+  public void initLoadData() {
+
+  }
 }

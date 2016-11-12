@@ -1,6 +1,5 @@
 package com.lchli.angithub.features.search.controller;
 
-import com.apkfuns.logutils.LogUtils;
 import com.lchli.angithub.R;
 import com.lchli.angithub.common.constants.ServerConst;
 import com.lchli.angithub.common.netApi.RestClient;
@@ -82,7 +81,14 @@ public class SearchController {
 
               @Override
               public void onNext(ReposResponse reposResponse) {
-                LogUtils.e(reposResponse);
+                if (reposResponse == null) {
+                  mCallback.onFail("response is null.");
+                  return;
+                }
+                if (reposResponse.isHaveError()) {
+                  mCallback.onFail(reposResponse.message);
+                  return;
+                }
                 if (reposResponse.items == null || reposResponse.items.size() < PAGE_SIZE) {
                   isHaveMore = false;
                 } else {

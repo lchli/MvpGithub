@@ -2,7 +2,6 @@ package com.lchli.angithub.features.me.views;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +15,14 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lchli.angithub.Navigator;
 import com.lchli.angithub.R;
+import com.lchli.angithub.common.base.BaseFragment;
 import com.lchli.angithub.common.utils.EventBusUtils;
+import com.lchli.angithub.common.utils.RefreshUtils;
 import com.lchli.angithub.common.utils.ToastUtils;
 import com.lchli.angithub.common.widget.CommonEmptyView;
-import com.lchli.angithub.features.me.controller.UserController;
 import com.lchli.angithub.features.me.bean.CurrentUserInfoResponse;
 import com.lchli.angithub.features.me.bean.LoginEvent;
+import com.lchli.angithub.features.me.controller.UserController;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -32,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MeFragment extends Fragment {
+public class MeFragment extends BaseFragment {
 
   @BindView(R.id.empty_view)
   CommonEmptyView emptyView;
@@ -98,7 +99,7 @@ public class MeFragment extends Fragment {
     pullRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
       @Override
       public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
-          mUserController.loadUserInfo();
+        mUserController.loadUserInfo();
       }
 
       @Override
@@ -107,12 +108,15 @@ public class MeFragment extends Fragment {
       }
     });
 
-    pullRefreshView.setRefreshing(true);
-    mUserController.loadUserInfo();
     return view;
   }
 
-
+  @Override
+  public void initLoadData() {
+    isInitLoadDataCalled = true;
+    RefreshUtils.setRefreshing(pullRefreshView, true);
+    mUserController.loadUserInfo();
+  }
 
   @Override
   public void onDestroyView() {

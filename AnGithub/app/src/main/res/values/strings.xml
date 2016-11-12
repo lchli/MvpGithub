@@ -28,6 +28,7 @@
         <item>搜索用户</item>
     </string-array>
     <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_webview">浏览器</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">邮箱</string>

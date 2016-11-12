@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import com.lchli.angithub.Navigator;
 import com.lchli.angithub.R;
 import com.lchli.angithub.common.base.BaseAppCompatActivity;
+import com.lchli.angithub.common.base.BaseFragment;
 import com.lchli.angithub.common.base.FragmentAdapter;
 import com.lchli.angithub.features.events.EventsFragment;
 import com.lchli.angithub.features.me.views.MeFragment;
@@ -24,68 +25,90 @@ import butterknife.ButterKnife;
 
 public class HomeActivity extends BaseAppCompatActivity {
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.viewpager)
-    ViewPager viewpager;
-    @BindView(R.id.tabs)
-    TabLayout tabs;
-    @BindView(R.id.content_home)
-    RelativeLayout contentHome;
+  @BindView(R.id.toolbar)
+  Toolbar toolbar;
+  @BindView(R.id.viewpager)
+  ViewPager viewpager;
+  @BindView(R.id.tabs)
+  TabLayout tabs;
+  @BindView(R.id.content_home)
+  RelativeLayout contentHome;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        ButterKnife.bind(this);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_home);
+    ButterKnife.bind(this);
 
-        setSupportActionBar(toolbar);
+    setSupportActionBar(toolbar);
 
-        FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
-        adapter.addFragment(Fragment.instantiate(this, EventsFragment.class.getName()), "event");
-        adapter.addFragment(Fragment.instantiate(this, RepoFragment.class.getName()), "repo");
-        adapter.addFragment(Fragment.instantiate(this, MeFragment.class.getName()), "me");
-        viewpager.setAdapter(adapter);
-        viewpager.setOffscreenPageLimit(adapter.getCount());
-        tabs.setupWithViewPager(viewpager);
-    }
+    final FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
+    adapter.addFragment(Fragment.instantiate(this, RepoFragment.class.getName()), "myRepos");
+    adapter.addFragment(Fragment.instantiate(this, EventsFragment.class.getName()), "event");
+    adapter.addFragment(Fragment.instantiate(this, MeFragment.class.getName()), "me");
+    viewpager.setAdapter(adapter);
+    viewpager.setOffscreenPageLimit(adapter.getCount());
+    viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+      @Override
+      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+      }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_search) {
-            showSearchChoiceDialog();
-            return true;
+      @Override
+      public void onPageSelected(int position) {
+        Fragment current = adapter.getItem(position);
+        if (current != null && current instanceof BaseFragment) {
+          BaseFragment fragment = (BaseFragment) current;
+          if (!fragment.isInitLoadDataCalled) {
+            fragment.initLoadData();
+          }
         }
+      }
 
-        return super.onOptionsItemSelected(item);
+      @Override
+      public void onPageScrollStateChanged(int state) {
+
+      }
+    });
+    tabs.setupWithViewPager(viewpager);
+  }
+
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    // Inflate the menu; this adds items to the action bar if it is present.
+    getMenuInflater().inflate(R.menu.home, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.action_search) {
+      showSearchChoiceDialog();
+      return true;
     }
 
-    private void showSearchChoiceDialog() {
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setItems(R.array.search_types, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                Navigator.toSearchRepo(activity());
-                                break;
-                            case 1:
-                                break;
-                        }
+    return super.onOptionsItemSelected(item);
+  }
 
-                    }
-                })
-                .create();
-        dialog.show();
-    }
+  private void showSearchChoiceDialog() {
+    AlertDialog dialog = new AlertDialog.Builder(this)
+        .setItems(R.array.search_types, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+              case 0:
+                Navigator.toSearchRepo(activity());
+                break;
+              case 1:
+                break;
+            }
+
+          }
+        })
+        .create();
+    dialog.show();
+  }
 
 }

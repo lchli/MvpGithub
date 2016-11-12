@@ -34,6 +34,10 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:name=".features.me.views.LoginActivity"
             android:label="@string/title_activity_login" />
+        <activity
+            android:theme="@style/AppTheme"
+            android:name=".features.webview.WebviewActivity"
+            android:label="@string/title_activity_webview" />
     </application>
 
 </manifest>

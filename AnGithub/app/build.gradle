@@ -67,4 +67,5 @@ dependencies {
     compile domainDependencies."logging-interceptor"
     compile domainDependencies."eventbus"
     compile domainDependencies."glide"
+    compile 'com.zhy:okhttputils:2.6.2'
 }

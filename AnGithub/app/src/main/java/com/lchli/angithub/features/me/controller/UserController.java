@@ -2,12 +2,11 @@ package com.lchli.angithub.features.me.controller;
 
 import android.util.Base64;
 
-import com.apkfuns.logutils.LogUtils;
 import com.lchli.angithub.common.constants.LocalConst;
 import com.lchli.angithub.common.netApi.RestClient;
 import com.lchli.angithub.common.netApi.apiService.GithubRepository;
-import com.lchli.angithub.common.utils.ExceptionLoger;
 import com.lchli.angithub.common.utils.Preconditions;
+import com.lchli.angithub.common.utils.UniversalLog;
 import com.lchli.angithub.features.me.bean.AuthPostParam;
 import com.lchli.angithub.features.me.bean.AuthResponse;
 import com.lchli.angithub.features.me.bean.CurrentUserInfoResponse;
@@ -87,7 +86,8 @@ public class UserController {
 
           @Override
           public void onError(Throwable e) {
-            ExceptionLoger.logException(e);
+
+            UniversalLog.get().e(e);
             mCallback.onFail(e.getMessage());
           }
 
@@ -135,7 +135,7 @@ public class UserController {
 
           @Override
           public void onError(Throwable e) {
-            ExceptionLoger.logException(e);
+            UniversalLog.get().e(e);
             mCallback.onFail(e.getMessage());
 
           }

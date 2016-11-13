@@ -1,6 +1,7 @@
 package com.lchli.angithub;
 
-import com.lchli.angithub.common.utils.ExceptionLoger;
+
+import com.lchli.angithub.common.utils.UniversalLog;
 
 /**
  * Created by lchli on 2016/8/14.
@@ -22,7 +23,7 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
     }
 
     public static void logException(Throwable ex) {
-        ExceptionLoger.logException(ex);
+        UniversalLog.get().e(ex);
 
 //        try {
 //            PrintWriter printWriterFile = new PrintWriter(new File(RECENT_EXCEPTION_FILE));

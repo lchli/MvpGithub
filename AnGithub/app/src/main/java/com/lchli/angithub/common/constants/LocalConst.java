@@ -1,5 +1,7 @@
 package com.lchli.angithub.common.constants;
 
+import android.os.Environment;
+
 import com.lchli.angithub.common.appEnv.AppEnvironmentFactory;
 
 /**
@@ -16,4 +18,5 @@ public final class LocalConst {
   }
 
   public static final boolean LOG_FLAG = AppEnvironmentFactory.getEnv().logFlag();
+  public static final String SD_PATH= Environment.getExternalStorageDirectory().getAbsolutePath();
 }

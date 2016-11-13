@@ -4,10 +4,10 @@ import com.lchli.angithub.R;
 import com.lchli.angithub.common.constants.ServerConst;
 import com.lchli.angithub.common.netApi.RestClient;
 import com.lchli.angithub.common.netApi.apiService.GithubRepository;
-import com.lchli.angithub.common.utils.ExceptionLoger;
 import com.lchli.angithub.common.utils.ListUtils;
 import com.lchli.angithub.common.utils.Preconditions;
 import com.lchli.angithub.common.utils.ResUtils;
+import com.lchli.angithub.common.utils.UniversalLog;
 import com.lchli.angithub.features.search.bean.ReposResponse;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -75,7 +75,7 @@ public class SearchController {
 
               @Override
               public void onError(Throwable e) {
-                ExceptionLoger.logException(e);
+                UniversalLog.get().e(e);
                 mCallback.onFail(e.getMessage());
               }
 

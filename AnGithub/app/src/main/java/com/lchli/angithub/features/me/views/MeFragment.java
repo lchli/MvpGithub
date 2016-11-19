@@ -55,16 +55,23 @@ public class MeFragment extends BaseFragment {
   PullToRefreshScrollView pullRefreshView;
 
   private UserController mUserController;
+  private boolean isDataAlreadyLoaded = false;
 
   private UserController.Callback userCb = new UserController.Callback() {
     @Override
     public void onFail(String msg) {
+      if(!isViewCreated){
+        return;
+      }
       pullRefreshView.onRefreshComplete();
       ToastUtils.systemToast(msg);
     }
 
     @Override
     public void onSuccess(CurrentUserInfoResponse data) {
+      if(!isViewCreated){
+        return;
+      }
       pullRefreshView.onRefreshComplete();
       refreshUi(data);
     }
@@ -77,11 +84,7 @@ public class MeFragment extends BaseFragment {
     mUserController = new UserController(userCb);
   }
 
-  @Override
-  public void onDestroy() {
-    super.onDestroy();
-    mUserController.unsubscripe();
-  }
+
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -111,17 +114,25 @@ public class MeFragment extends BaseFragment {
     return view;
   }
 
+
+
   @Override
-  public void initLoadData() {
-    isInitLoadDataCalled = true;
+  protected void whenVisibleToUser() {
+    if (isDataAlreadyLoaded) {
+      return;
+    }
+    isDataAlreadyLoaded = true;
     RefreshUtils.setRefreshing(pullRefreshView, true);
     mUserController.loadUserInfo();
   }
 
   @Override
   public void onDestroyView() {
-    super.onDestroyView();
+    mUserController.unsubscripe();
     EventBusUtils.unregister(this);
+    super.onDestroyView();
+    isDataAlreadyLoaded=false;
+
   }
 
   private void refreshUi(CurrentUserInfoResponse userInfo) {

@@ -21,6 +21,7 @@ import com.lchli.angithub.common.utils.ToastUtils;
 public class EventsFragment extends BaseFragment {
 
     private OnFragmentInteractionListener mListener;
+    private boolean isDataAlreadyLoaded = false;
 
     public EventsFragment() {
         // Required empty public constructor
@@ -53,9 +54,18 @@ public class EventsFragment extends BaseFragment {
     }
 
     @Override
-    public void initLoadData() {
-        isInitLoadDataCalled=true;
+    protected void whenVisibleToUser() {
+        if (isDataAlreadyLoaded) {
+            return;
+        }
+        isDataAlreadyLoaded = true;
         ToastUtils.systemToast("loading events.");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        isDataAlreadyLoaded=false;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.lchli.angithub.features.repo;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,16 +42,23 @@ public class RepoFragment extends BaseFragment {
 
   private SearchReposAdapter mSearchReposAdapter;
   private SearchController mSearchController;
+  private boolean isDataAlreadyLoaded = false;
 
   private SearchController.Callback searchCb = new SearchController.Callback() {
     @Override
     public void onSucess(List<ReposResponse.Repo> items) {
+      if (!isViewCreated) {
+        return;
+      }
       RefreshUtils.onRefreshComplete(myReposListView);
       mSearchReposAdapter.refresh(items);
     }
 
     @Override
     public void onFail(String msg) {
+      if (!isViewCreated) {
+        return;
+      }
       RefreshUtils.onRefreshComplete(myReposListView);
       ToastUtils.systemToast(msg);
     }
@@ -60,13 +68,17 @@ public class RepoFragment extends BaseFragment {
     // Required empty public constructor
   }
 
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    mSearchController = new SearchController(searchCb);
+  }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_repo, container, false);
     ButterKnife.bind(this, view);
-
 
     CommonEmptyView emptyView = new CommonEmptyView(getActivity());
     emptyView.addEmptyText(getString(R.string.empty_data), new View.OnClickListener() {
@@ -92,20 +104,17 @@ public class RepoFragment extends BaseFragment {
     mSearchReposAdapter = new SearchReposAdapter();
     myReposListView.setAdapter(mSearchReposAdapter);
 
-    mSearchController = new SearchController(searchCb);
-    view.post(new Runnable() {
-      @Override
-      public void run() {
-        initLoadData();
-      }
-    });
     return view;
   }
 
 
+
   @Override
-  public void initLoadData() {
-    isInitLoadDataCalled = true;
+  protected void whenVisibleToUser() {
+    if (isDataAlreadyLoaded) {
+      return;
+    }
+    isDataAlreadyLoaded = true;
     RefreshUtils.setRefreshing(myReposListView, true);
     refresh();
   }
@@ -147,6 +156,7 @@ public class RepoFragment extends BaseFragment {
   @Override
   public void onDestroyView() {
     mSearchController.unsubscripe();
+    isDataAlreadyLoaded=false;
     super.onDestroyView();
   }
 }

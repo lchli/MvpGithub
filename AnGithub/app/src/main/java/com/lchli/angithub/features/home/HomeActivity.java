@@ -15,7 +15,6 @@ import android.widget.RelativeLayout;
 import com.lchli.angithub.Navigator;
 import com.lchli.angithub.R;
 import com.lchli.angithub.common.base.BaseAppCompatActivity;
-import com.lchli.angithub.common.base.BaseFragment;
 import com.lchli.angithub.common.base.FragmentAdapter;
 import com.lchli.angithub.common.constants.LocalConst;
 import com.lchli.angithub.common.netApi.FileClient;
@@ -59,28 +58,7 @@ public class HomeActivity extends BaseAppCompatActivity {
     adapter.addFragment(Fragment.instantiate(this, MeFragment.class.getName()), "me");
     viewpager.setAdapter(adapter);
     viewpager.setOffscreenPageLimit(adapter.getCount());
-    viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-      @Override
-      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-      }
-
-      @Override
-      public void onPageSelected(int position) {
-        Fragment current = adapter.getItem(position);
-        if (current != null && current instanceof BaseFragment) {
-          BaseFragment fragment = (BaseFragment) current;
-          if (!fragment.isInitLoadDataCalled) {
-            fragment.initLoadData();
-          }
-        }
-      }
-
-      @Override
-      public void onPageScrollStateChanged(int state) {
-
-      }
-    });
     tabs.setupWithViewPager(viewpager);
   }
 

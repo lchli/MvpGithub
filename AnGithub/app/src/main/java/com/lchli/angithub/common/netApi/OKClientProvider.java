@@ -1,9 +1,9 @@
 package com.lchli.angithub.common.netApi;
 
 
-import com.apkfuns.logutils.LogUtils;
 import com.lchli.angithub.common.netApi.interceptor.CommonParamsInterceptor;
 import com.lchli.angithub.common.utils.ContextProvider;
+import com.lchli.angithub.common.utils.UniversalLog;
 import com.zhy.http.okhttp.https.HttpsUtils;
 
 import java.io.IOException;
@@ -54,7 +54,7 @@ public final class OKClientProvider {
   private static class OkhttpLoger implements HttpLoggingInterceptor.Logger {
     @Override
     public void log(String message) {
-      LogUtils.e(message);
+      UniversalLog.get().e(message);
     }
   }
 }

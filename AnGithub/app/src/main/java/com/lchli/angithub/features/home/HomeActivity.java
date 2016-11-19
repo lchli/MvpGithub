@@ -19,6 +19,7 @@ import com.lchli.angithub.common.base.FragmentAdapter;
 import com.lchli.angithub.common.constants.LocalConst;
 import com.lchli.angithub.common.netApi.FileClient;
 import com.lchli.angithub.common.utils.ToastUtils;
+import com.lchli.angithub.common.utils.UiHandler;
 import com.lchli.angithub.common.utils.UniversalLog;
 import com.lchli.angithub.features.events.EventsFragment;
 import com.lchli.angithub.features.me.views.MeFragment;
@@ -33,91 +34,79 @@ import okhttp3.Call;
 
 public class HomeActivity extends BaseAppCompatActivity {
 
-  @BindView(R.id.toolbar)
-  Toolbar toolbar;
-  @BindView(R.id.viewpager)
-  ViewPager viewpager;
-  @BindView(R.id.tabs)
-  TabLayout tabs;
-  @BindView(R.id.content_home)
-  RelativeLayout contentHome;
-  @BindView(R.id.progressBar)
-  ProgressBar progressBar;
-
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_home);
-    ButterKnife.bind(this);
-
-    setSupportActionBar(toolbar);
-
-    final FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
-    adapter.addFragment(Fragment.instantiate(this, RepoFragment.class.getName()), "myRepos");
-    adapter.addFragment(Fragment.instantiate(this, EventsFragment.class.getName()), "event");
-    adapter.addFragment(Fragment.instantiate(this, MeFragment.class.getName()), "me");
-    viewpager.setAdapter(adapter);
-    viewpager.setOffscreenPageLimit(adapter.getCount());
-
-    tabs.setupWithViewPager(viewpager);
-  }
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.viewpager)
+    ViewPager viewpager;
+    @BindView(R.id.tabs)
+    TabLayout tabs;
+    @BindView(R.id.content_home)
+    RelativeLayout contentHome;
 
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu; this adds items to the action bar if it is present.
-    getMenuInflater().inflate(R.menu.home, menu);
-    return true;
-  }
+    private FileClient.CancelableRunnable downloadRunnable;
 
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == R.id.action_search) {
-      showSearchChoiceDialog();
-      return true;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home);
+        ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+
+        final FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
+        adapter.addFragment(Fragment.instantiate(this, RepoFragment.class.getName()), "myRepos");
+        adapter.addFragment(Fragment.instantiate(this, EventsFragment.class.getName()), "event");
+        adapter.addFragment(Fragment.instantiate(this, MeFragment.class.getName()), "me");
+        viewpager.setAdapter(adapter);
+        viewpager.setOffscreenPageLimit(adapter.getCount());
+
+        tabs.setupWithViewPager(viewpager);
     }
 
-    return super.onOptionsItemSelected(item);
-  }
+    @Override
+    public void finish() {
+        if (downloadRunnable != null) {
+            downloadRunnable.cancel();
+        }
+        super.finish();
+    }
 
-  private void showSearchChoiceDialog() {
-    AlertDialog dialog = new AlertDialog.Builder(this)
-        .setItems(R.array.search_types, new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-              case 0:
-                Navigator.toSearchRepo(activity());
-                break;
-              case 1:
-                final String url = "http://" + "192.168.1.2" + ":9090" + "/UserPortraitDir/1.mp4";
-                FileClient.downloadFile(url, new FileCallBack(LocalConst.SD_PATH, "2.mp4") {
-                  @Override
-                  public void onError(Call call, Exception e, int id) {
-                    UniversalLog.get().e(e);
-                    ToastUtils.systemToast(e.getMessage());
-                  }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.home, menu);
+        return true;
+    }
 
-                  @Override
-                  public void onResponse(File response, int id) {
-                    ToastUtils.systemToast("download onSuccess.");
-                  }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_search) {
+            showSearchChoiceDialog();
+            return true;
+        }
 
-                  @Override
-                  public void inProgress(float progress, long total, int id) {
-                    final int p= (int) (progress*100);
-                    UniversalLog.get().e(p+":"+Thread.currentThread().getName());
-                    progressBar.setProgress(p);
-                  }
-                });
+        return super.onOptionsItemSelected(item);
+    }
 
-                break;
-            }
+    private void showSearchChoiceDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setItems(R.array.search_types, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                Navigator.toSearchRepo(activity());
+                                break;
+                            case 1:
 
-          }
-        })
-        .create();
-    dialog.show();
-  }
+                                break;
+                        }
+
+                    }
+                })
+                .create();
+        dialog.show();
+    }
 
 }

@@ -99,7 +99,7 @@ public class HomeActivity extends BaseAppCompatActivity {
                                 Navigator.toSearchRepo(activity());
                                 break;
                             case 1:
-
+                                Navigator.toRepoDetail(activity());
                                 break;
                         }
 

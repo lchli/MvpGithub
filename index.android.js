@@ -3,6 +3,7 @@
  * https://github.com/facebook/react-native
  * @flow
  */
+'use strict';
 
 import React, { Component } from 'react';
 import {
@@ -10,35 +11,63 @@ import {
   StyleSheet,
   Text,
   View,
-  ListView
+  ListView,
+  Button
 } from 'react-native';
+
 
 export default class AweProject extends Component {
 
-constructor() {
-    super();
+
+
+constructor(props) {
+    super(props);
    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
       this.state = {
-        dataSource: ds.cloneWithRows(['row 1', 'row 2']),
+      dataSource: ds.cloneWithRows(['445']),
+      dss:ds
+
+
       };
 
 
 
   }
 
+//get data source.
+ getDataSource2(movies) {
+        return this.state.dss.cloneWithRows(movies);
+    }
 
-//getInitialState:function() {
-//    return fetch('https://facebook.github.io/react-native/movies.json')
-//      .then((response) => response.json())
-//      .then((responseJson) => {
-//      console.error(responseJson);
-//
-//        return responseJson.movies;
-//      })
-//      .catch((error) => {
-//        console.error(error);
-//      });
-//  }
+
+onSearchChange() {
+
+  fetch('https://facebook.github.io/react-native/movies.json')
+      .then((response) => response.json())
+      .then((responseJson) => {
+
+//var resultData = [];
+//            for (var i = 0, len = responseJson.movies.length; i < len; i++) {
+//                resultData.push(responseJson.movies[i]);
+//            }
+
+  this.setState({
+
+                 dataSource: this.getDataSource2(responseJson.movies)
+             });
+
+
+        return responseJson.movies;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+
+
+
 
 
   render() {
@@ -55,9 +84,16 @@ constructor() {
           Shake or press menu button for dev menu
         </Text>
 
+       <Button
+         onPress={this.onSearchChange.bind(this)}
+         title="Learn More"
+         color="#841584"
+         accessibilityLabel="Learn more about this purple button"
+       />
+
         <ListView
                 dataSource={this.state.dataSource}
-                renderRow={(rowData) => <Text>{rowData}</Text>}
+                renderRow={(rowData) => <Text>{rowData.title}</Text>}
               />
       </View>
     );

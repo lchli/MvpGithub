@@ -8,6 +8,7 @@ import com.lchli.angithub.features.search.bean.ReposResponse;
 
 import java.util.Map;
 
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -26,9 +27,9 @@ public interface GithubRepository {
   Observable<ReposResponse> searchRepo(@QueryMap Map<String, String> params);
 
   @POST(Urlconst.Github.PATH_AUTHORIZATIONS)
-  Observable<AuthResponse> authorize(@Body AuthPostParam authPostParam,
+  Call<AuthResponse> authorize(@Body AuthPostParam authPostParam,
       @Header("Authorization") String basicAuth);
 
   @GET(Urlconst.Github.PATH_USER)
-  Observable<CurrentUserInfoResponse> getCurrentUserInfo(@Query("access_token") String token);
+  Call<CurrentUserInfoResponse> getCurrentUserInfo(@Query("access_token") String token);
 }

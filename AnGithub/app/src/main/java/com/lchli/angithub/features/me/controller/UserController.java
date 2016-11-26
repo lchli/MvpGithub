@@ -1,25 +1,19 @@
 package com.lchli.angithub.features.me.controller;
 
+import android.os.AsyncTask;
 import android.util.Base64;
 
 import com.lchli.angithub.common.constants.LocalConst;
 import com.lchli.angithub.common.netApi.RestClient;
 import com.lchli.angithub.common.netApi.apiService.GithubRepository;
+import com.lchli.angithub.common.netApi.callbacks.RetrofitCallback;
 import com.lchli.angithub.common.utils.Preconditions;
-import com.lchli.angithub.common.utils.UniversalLog;
 import com.lchli.angithub.features.me.bean.AuthPostParam;
 import com.lchli.angithub.features.me.bean.AuthResponse;
 import com.lchli.angithub.features.me.bean.CurrentUserInfoResponse;
 import com.lchli.angithub.features.me.model.UserAccountRepository;
 
-import rx.Observable;
-import rx.Observer;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import retrofit2.Call;
 
 /**
  * Created by lchli on 2016/11/6.
@@ -27,129 +21,131 @@ import rx.subscriptions.CompositeSubscription;
 
 public class UserController {
 
-  private final CompositeSubscription mCompositeSubscription;
+    private Call<AuthResponse> authCall;
+    private Call<CurrentUserInfoResponse> userInfoCall;
 
-  public interface Callback {
-    void onFail(String msg);
+    public interface Callback {
+        void onFail(String msg);
 
-    void onSuccess(CurrentUserInfoResponse data);
-  }
+        void onSuccess(CurrentUserInfoResponse data);
+    }
 
-  private Callback mCallback;
+    private Callback mCallback;
 
-  public UserController(Callback mCallback) {
-    this.mCallback = Preconditions.checkNotNull(mCallback);
-    mCompositeSubscription = new CompositeSubscription();
-  }
+    public UserController(Callback mCallback) {
+        this.mCallback = Preconditions.checkNotNull(mCallback);
+    }
 
-  public void login(final String userName, String password) {
+    public void login(final String userName, String password) {
 
-    String userCredentials = userName + ":" + password;
-    String basicAuth =
-        "Basic " + new String(Base64.encode(userCredentials.getBytes(), Base64.DEFAULT));
-
-    final AuthPostParam authPostParam = new AuthPostParam();
-    authPostParam.note = LocalConst.Github.NOTE;
-    authPostParam.client_id = LocalConst.Github.CLIENT_ID;
-    authPostParam.client_secret = LocalConst.Github.CLIENT_SECRET;
-    authPostParam.scopes = LocalConst.Github.SCOPES;
-
-    final GithubRepository repo = RestClient.instance().createService(GithubRepository.class);
-    unsubscripe();
-    Subscription subscription = repo.authorize(authPostParam, basicAuth.trim())
-        .flatMap(new Func1<AuthResponse, Observable<CurrentUserInfoResponse>>() {
-          @Override
-          public Observable<CurrentUserInfoResponse> call(AuthResponse authResponse) {
-            if (authResponse == null || authResponse.token == null) {
-              return null;
-            }
-            UserAccountRepository.get().saveAccount(authResponse);
-            return repo.getCurrentUserInfo(authResponse.token);
-          }
-        })
-        .map(new Func1<CurrentUserInfoResponse, CurrentUserInfoResponse>() {
-          @Override
-          public CurrentUserInfoResponse call(CurrentUserInfoResponse userInfoResponse) {
-            if (userInfoResponse != null) {
-              UserAccountRepository.get().saveUserInfo(userInfoResponse);
-            }
-            return userInfoResponse;
-          }
-        })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Observer<CurrentUserInfoResponse>() {
-          @Override
-          public void onCompleted() {
-
-      }
-
-          @Override
-          public void onError(Throwable e) {
-
-            UniversalLog.get().e(e);
-            mCallback.onFail(e.getMessage());
-          }
-
-          @Override
-          public void onNext(CurrentUserInfoResponse data) {
-            mCallback.onSuccess(data);
-          }
-        });
-    mCompositeSubscription.add(subscription);
-  }
-
-  public void loadUserInfo() {
-    unsubscripe();
-    Subscription subscription = Observable.create(new Observable.OnSubscribe<AuthResponse>() {
-      @Override
-      public void call(Subscriber<? super AuthResponse> subscriber) {
-        subscriber.onNext(UserAccountRepository.get().getAccount());
-      }
-    }).flatMap(new Func1<AuthResponse, Observable<CurrentUserInfoResponse>>() {
-      @Override
-      public Observable<CurrentUserInfoResponse> call(AuthResponse authResponse) {
-        if (authResponse == null) {
-          return Observable.just(null);
+        if (authCall != null) {
+            authCall.cancel();
+            authCall = null;
         }
-        return RestClient.instance().createService(GithubRepository.class)
-            .getCurrentUserInfo(authResponse.token);
-      }
-    })
-        .map(new Func1<CurrentUserInfoResponse, CurrentUserInfoResponse>() {
-          @Override
-          public CurrentUserInfoResponse call(CurrentUserInfoResponse userInfoResponse) {
-            if (userInfoResponse != null) {
-              UserAccountRepository.get().saveUserInfo(userInfoResponse);
+
+        String userCredentials = userName + ":" + password;
+        String basicAuth =
+                "Basic " + new String(Base64.encode(userCredentials.getBytes(), Base64.DEFAULT));
+
+        final AuthPostParam authPostParam = new AuthPostParam();
+        authPostParam.note = LocalConst.Github.NOTE;
+        authPostParam.client_id = LocalConst.Github.CLIENT_ID;
+        authPostParam.client_secret = LocalConst.Github.CLIENT_SECRET;
+        authPostParam.scopes = LocalConst.Github.SCOPES;
+
+
+        final GithubRepository repo = RestClient.instance().createService(GithubRepository.class);
+        authCall = repo.authorize(authPostParam, basicAuth.trim());
+        authCall.enqueue(new RetrofitCallback<AuthResponse>() {
+            @Override
+            public void onSuccess(final AuthResponse response) {
+                if (response.token == null) {
+                    mCallback.onFail("token is null.");
+                    return;
+                }
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        UserAccountRepository.get().saveAccount(response);
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        loadUserInfo();
+                    }
+                }.execute();
             }
-            return userInfoResponse;
-          }
-        })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Observer<CurrentUserInfoResponse>() {
-          @Override
-          public void onCompleted() {
 
-      }
-
-          @Override
-          public void onError(Throwable e) {
-            UniversalLog.get().e(e);
-            mCallback.onFail(e.getMessage());
-
-          }
-
-          @Override
-          public void onNext(CurrentUserInfoResponse userInfoResponse) {
-            mCallback.onSuccess(userInfoResponse);
-          }
+            @Override
+            public void onFail(Throwable error) {
+                mCallback.onFail(error.getMessage());
+            }
         });
 
-    mCompositeSubscription.add(subscription);
-  }
 
-  public void unsubscripe() {
-    mCompositeSubscription.clear();
-  }
+    }
+
+    public void loadUserInfo() {
+
+        if (userInfoCall != null) {
+            userInfoCall.cancel();
+            userInfoCall = null;
+        }
+
+        new AsyncTask<Void, Void, AuthResponse>() {
+            @Override
+            protected AuthResponse doInBackground(Void... params) {
+                return UserAccountRepository.get().getAccount();
+            }
+
+            @Override
+            protected void onPostExecute(AuthResponse authResponse) {
+                if (authResponse == null) {
+                    mCallback.onFail("authResponse is null.");
+                    return;
+                }
+                userInfoCall = RestClient.instance().createService(GithubRepository.class)
+                        .getCurrentUserInfo(authResponse.token);
+                userInfoCall.enqueue(new RetrofitCallback<CurrentUserInfoResponse>() {
+                    @Override
+                    public void onSuccess(final CurrentUserInfoResponse response) {
+                        new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Void... params) {
+                                UserAccountRepository.get().saveUserInfo(response);
+                                return null;
+                            }
+
+                            @Override
+                            protected void onPostExecute(Void aVoid) {
+                                mCallback.onSuccess(response);
+                            }
+                        }.execute();
+                    }
+
+                    @Override
+                    public void onFail(Throwable error) {
+                        mCallback.onFail(error.getMessage());
+                    }
+                });
+
+            }
+        }.execute();
+
+    }
+
+    public void unsubscripe() {
+
+        if (userInfoCall != null) {
+            userInfoCall.cancel();
+            userInfoCall = null;
+        }
+
+        if (authCall != null) {
+            authCall.cancel();
+            authCall = null;
+        }
+
+    }
 }

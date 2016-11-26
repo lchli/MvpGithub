@@ -2,16 +2,11 @@ package com.lchli.angithub.common.netApi;
 
 
 import com.lchli.angithub.common.netApi.interceptor.CommonParamsInterceptor;
-import com.lchli.angithub.common.utils.ContextProvider;
-import com.lchli.angithub.common.utils.UniversalLog;
-import com.zhy.http.okhttp.https.HttpsUtils;
+import com.lchli.angithub.common.netApi.interceptor.LogInterceptor;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * Created by lchli on 2016/10/10.
@@ -27,34 +22,27 @@ public final class OKClientProvider {
 
   public static OkHttpClient.Builder getHttpClientBuilder() {
 
-    HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new OkhttpLoger());
-    logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
     return new OkHttpClient.Builder()
         .connectTimeout(CONNECT_TIME_OUT, TimeUnit.SECONDS)
         .readTimeout(READ_TIME_OUT, TimeUnit.SECONDS)
         .writeTimeout(WRITE_TIME_OUT, TimeUnit.SECONDS)
         .addInterceptor(new CommonParamsInterceptor())
-        .addInterceptor(logging);
+        .addInterceptor(new LogInterceptor());
   }
 
-  public static OkHttpClient.Builder getSSLClientBuilder() {
-    InputStream inputStream;
-    try {
-      inputStream = ContextProvider.context().getAssets().open("baidu.crt");
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(null, null, null);
+  // public static OkHttpClient.Builder getSSLClientBuilder() {
+  // InputStream inputStream;
+  // try {
+  // inputStream = ContextProvider.context().getAssets().open("baidu.crt");
+  // } catch (IOException e) {
+  // throw new RuntimeException(e);
+  // }
+  // HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(null, null, null);
+  //
+  // return getHttpClientBuilder().sslSocketFactory(sslParams.sSLSocketFactory,
+  // sslParams.trustManager);
+  // }
 
-    return getHttpClientBuilder().sslSocketFactory(sslParams.sSLSocketFactory,
-        sslParams.trustManager);
-  }
 
-  private static class OkhttpLoger implements HttpLoggingInterceptor.Logger {
-    @Override
-    public void log(String message) {
-      UniversalLog.get().e(message);
-    }
-  }
 }

@@ -1,13 +1,7 @@
 package com.lchli.angithub.common.netApi;
 
-import android.util.Log;
-
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.builder.PostFormBuilder;
-import com.zhy.http.okhttp.callback.Callback;
-import com.zhy.http.okhttp.callback.FileCallBack;
-import com.zhy.http.okhttp.request.RequestCall;
-import com.zhy.http.okhttp.utils.Exceptions;
+import com.lchli.angithub.common.netApi.callbacks.OkCallback;
+import com.lchli.angithub.common.utils.UniversalLog;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,28 +17,35 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import retrofit2.http.PUT;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
+import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okio.Buffer;
+import okio.BufferedSink;
+import okio.ForwardingSink;
+import okio.Okio;
+import okio.Sink;
 
 /**
  * Created by lchli on 2016/4/25.
  */
 public class FileClient {
 
-    static {
-        OkHttpUtils.initClient(OKClientProvider.getHttpClientBuilder().build());
-    }
 
     private static final int CONNECT_TIMEOUT = 10_000;
     private static final int READ_TIMEOUT = 30_000;
     private static final int DOWNLOAD_BUF_SIZE = 2048;
     private static final ExecutorService executor = Executors.newFixedThreadPool(5);
-    private static final boolean DEBUG = true;
+    public static final boolean DEBUG = true;
     private static final String tag = FileClient.class.getSimpleName();
+    private static OkHttpClient okHttpClient = OKClientProvider.getHttpClientBuilder().build();
+    private static MediaType MEDIA_TYPE_STREAM = MediaType.parse("application/octet-stream");
 
 
-    public interface TransportFileCallback {
+    public interface DownloadFileCallback {
 
         void onProgress(final int totalBytes, final int finishedBytes);
 
@@ -52,14 +54,20 @@ public class FileClient {
         void onSuccess();
     }
 
+    public abstract class FileUploadCallback<T> extends OkCallback<T> {
+
+        abstract void onRequestProgress(long bytesWritten, long contentLength);
+
+    }
+
     public static class CancelableRunnable implements Runnable {
 
         private final AtomicBoolean isUserCancel = new AtomicBoolean(false);
-        private TransportFileCallback callback;
+        private DownloadFileCallback callback;
         private String urlPath;
         private String saveFilePath;
 
-        public CancelableRunnable(TransportFileCallback callback, String urlPath, String saveFilePath) {
+        public CancelableRunnable(DownloadFileCallback callback, String urlPath, String saveFilePath) {
             this.callback = callback;
             this.urlPath = urlPath;
             this.saveFilePath = saveFilePath;
@@ -153,12 +161,13 @@ public class FileClient {
 
     private static void log(String msg) {
         if (DEBUG) {
-            Log.e(tag, msg);
+            UniversalLog.get().e(msg);
         }
     }
 
 
-    public static CancelableRunnable downloadFile(String urlPath, String saveFilePath, TransportFileCallback callback) {
+    public static CancelableRunnable downloadFile(String urlPath, String saveFilePath,
+                                                  DownloadFileCallback callback) {
 
         log(String.format("urlPath:%s\nsaveFilePath:%s", urlPath, saveFilePath));
 
@@ -168,34 +177,77 @@ public class FileClient {
     }
 
 
-    public static RequestCall uploadFile(final String url, Map<String, String> textParams,
-                                         Map<String, File> fileParams, Callback callback) {
+    private static Call uploadFileImpl(final String url, Map<String, String> textParams,
+                                       Map<String, File> fileParams, final FileUploadCallback callback, String filesParamName) {
 
-        PostFormBuilder builder = OkHttpUtils.post().url(url);
-        if (!isNullOrEmpty(fileParams)) {
-            Set<Map.Entry<String, File>> entrySet = fileParams.entrySet();
-            for (Map.Entry<String, File> entry : entrySet) {
-                builder.addFile(entry.getKey(), entry.getValue().getName(), entry.getValue());
+        MultipartBody.Builder builder = new MultipartBody.Builder();
+        builder.setType(MultipartBody.FORM);
+
+        if (!isNullOrEmpty(textParams)) {
+            Set<Map.Entry<String, String>> set = textParams.entrySet();
+            for (Map.Entry<String, String> entry : set) {
+                builder.addFormDataPart(entry.getKey(), entry.getValue());
             }
+
         }
 
-        RequestCall call = builder.params(textParams).build();
-        call.execute(callback);
+        if (!isNullOrEmpty(fileParams)) {
+            Set<Map.Entry<String, File>> set = fileParams.entrySet();
+            for (Map.Entry<String, File> entry : set) {
+                builder.addFormDataPart(filesParamName != null ? filesParamName : entry.getKey(), entry.getValue().getName(),
+                        RequestBody.create(MEDIA_TYPE_STREAM, entry.getValue()));
+            }
+
+        }
+
+        RequestBody requestBody = builder.build();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(new CountingRequestBody(requestBody, new CountingRequestBody.Listener() {
+                    @Override
+                    public void onRequestProgress(final long bytesWritten, final long contentLength) {
+                        if (callback.isCallbackInUiThread()) {
+
+                            callback.runInUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    callback.onRequestProgress(bytesWritten, contentLength);
+                                }
+                            });
+
+                        } else {
+                            callback.onRequestProgress(bytesWritten, contentLength);
+                        }
+
+                    }
+                }))
+                .build();
+
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(callback);
+
         return call;
+
     }
 
-    public static RequestCall uploadFile(final String url, Map<String, String> textParams,
-                                         List<File> fileParams, String filesParamName, Callback callback) {
+    private static Call uploadFile(final String url, Map<String, String> textParams,
+                                   Map<String, File> fileParams, final FileUploadCallback callback) {
 
-        PostFormBuilder builder = OkHttpUtils.post().url(url);
-        if (!isEmptyList(fileParams)) {
-            for (File entry : fileParams) {
-                builder.addFile(filesParamName, entry.getName(), entry);
+        return uploadFileImpl(url, textParams, fileParams, callback, null);
+
+    }
+
+    public static Call uploadFile(final String url, Map<String, String> textParams,
+                                  List<File> files, String filesParamName, final FileUploadCallback callback) {
+        Map<String, File> fileParams = new HashMap<>();
+        if (!isEmptyList(files)) {
+            for (int i = 0; i < files.size(); i++) {
+                fileParams.put(i + "", files.get(i));
             }
         }
-        RequestCall call = builder.params(textParams).build();
-        call.execute(callback);
-        return call;
+
+        return uploadFileImpl(url, textParams, fileParams, callback, filesParamName);
     }
 
 
@@ -206,6 +258,75 @@ public class FileClient {
 
     private static boolean isEmptyList(List list) {
         return list == null || list.isEmpty();
+    }
+
+    /**
+     * Decorates an OkHttp request body to count the number of bytes written when writing it. Can
+     * decorate any request body, but is most useful for tracking the upload progress of large
+     * multipart requests.
+     *
+     * @author Leo Nikkilä
+     */
+    private static class CountingRequestBody extends RequestBody {
+
+        protected RequestBody delegate;
+        protected Listener listener;
+
+        protected CountingSink countingSink;
+
+        public CountingRequestBody(RequestBody delegate, Listener listener) {
+            this.delegate = delegate;
+            this.listener = listener;
+        }
+
+        @Override
+        public MediaType contentType() {
+            return delegate.contentType();
+        }
+
+        @Override
+        public long contentLength() {
+            try {
+                return delegate.contentLength();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return -1;
+        }
+
+        @Override
+        public void writeTo(BufferedSink sink) throws IOException {
+
+            countingSink = new CountingSink(sink);
+            BufferedSink bufferedSink = Okio.buffer(countingSink);
+
+            delegate.writeTo(bufferedSink);
+
+            bufferedSink.flush();
+        }
+
+        private final class CountingSink extends ForwardingSink {
+
+            private long bytesWritten = 0;
+
+            public CountingSink(Sink delegate) {
+                super(delegate);
+            }
+
+            @Override
+            public void write(Buffer source, long byteCount) throws IOException {
+                super.write(source, byteCount);
+
+                bytesWritten += byteCount;
+                listener.onRequestProgress(bytesWritten, contentLength());
+            }
+
+        }
+
+        private interface Listener {
+            void onRequestProgress(long bytesWritten, long contentLength);
+        }
+
     }
 
 

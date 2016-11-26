@@ -9,28 +9,19 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.lchli.angithub.Navigator;
 import com.lchli.angithub.R;
 import com.lchli.angithub.common.base.BaseAppCompatActivity;
 import com.lchli.angithub.common.base.FragmentAdapter;
-import com.lchli.angithub.common.constants.LocalConst;
 import com.lchli.angithub.common.netApi.FileClient;
-import com.lchli.angithub.common.utils.ToastUtils;
-import com.lchli.angithub.common.utils.UiHandler;
-import com.lchli.angithub.common.utils.UniversalLog;
 import com.lchli.angithub.features.events.EventsFragment;
 import com.lchli.angithub.features.me.views.MeFragment;
 import com.lchli.angithub.features.repo.RepoFragment;
-import com.zhy.http.okhttp.callback.FileCallBack;
-
-import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.Call;
 
 public class HomeActivity extends BaseAppCompatActivity {
 

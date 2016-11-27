@@ -3,14 +3,13 @@ package com.lchli.angithub.common.base;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.View;
 
 
 /**
  * Created by lchli on 2016/8/10.
  */
-public abstract class ViewPagerFragment extends Fragment {
+public abstract class ViewPagerFragment extends BaseFragment {
 
   protected boolean isViewCreated = false;
   private Handler handler = new Handler();

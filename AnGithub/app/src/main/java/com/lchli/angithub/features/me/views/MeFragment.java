@@ -15,7 +15,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lchli.angithub.Navigator;
 import com.lchli.angithub.R;
-import com.lchli.angithub.common.base.BaseFragment;
+import com.lchli.angithub.common.base.ViewPagerFragment;
 import com.lchli.angithub.common.utils.EventBusUtils;
 import com.lchli.angithub.common.utils.RefreshUtils;
 import com.lchli.angithub.common.utils.ToastUtils;
@@ -33,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MeFragment extends BaseFragment {
+public class MeFragment extends ViewPagerFragment {
 
   @BindView(R.id.empty_view)
   CommonEmptyView emptyView;
@@ -60,7 +60,7 @@ public class MeFragment extends BaseFragment {
   private UserController.Callback userCb = new UserController.Callback() {
     @Override
     public void onFail(String msg) {
-      if(!isViewCreated){
+      if (!isViewCreated) {
         return;
       }
       pullRefreshView.onRefreshComplete();
@@ -69,7 +69,7 @@ public class MeFragment extends BaseFragment {
 
     @Override
     public void onSuccess(CurrentUserInfoResponse data) {
-      if(!isViewCreated){
+      if (!isViewCreated) {
         return;
       }
       pullRefreshView.onRefreshComplete();
@@ -122,8 +122,8 @@ public class MeFragment extends BaseFragment {
       return;
     }
     isDataAlreadyLoaded = true;
+    // this will trigger onPullDownToRefresh to load data.
     RefreshUtils.setRefreshing(pullRefreshView, true);
-    mUserController.loadUserInfo();
   }
 
   @Override
@@ -131,7 +131,7 @@ public class MeFragment extends BaseFragment {
     mUserController.unsubscripe();
     EventBusUtils.unregister(this);
     super.onDestroyView();
-    isDataAlreadyLoaded=false;
+    isDataAlreadyLoaded = false;
 
   }
 

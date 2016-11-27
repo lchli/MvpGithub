@@ -13,9 +13,9 @@ android {
         versionCode project.ext.versionCode
         versionName project.ext.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-//        ndk {
-//            abiFilters "armeabi-v7a", "x86"
-//        }
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
 
     }
     buildTypes {

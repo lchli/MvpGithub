@@ -8,9 +8,14 @@ import com.lchli.angithub.common.appEnv.AppEnvironmentFactory;
 
 public class Urlconst {
 
+  public interface Hosts {
+    String GITHUB_DEBUG = "https://api.github.com";
+    String GITHUB_RELEASE = "https://api.github.com";
+  }
+
   public interface Github {
 
-    String HOST= AppEnvironmentFactory.getEnv().getIP();
+    String HOST = AppEnvironmentFactory.ins().getIP();
     /**
      * 搜索仓库。
      */

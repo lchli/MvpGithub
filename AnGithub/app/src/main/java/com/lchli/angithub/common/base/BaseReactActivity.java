@@ -1,6 +1,12 @@
 package com.lchli.angithub.common.base;
 
-public class BaseReactActivity extends BaseActivity implements DefaultHardwareBackBtnHandler {
+import android.os.Bundle;
+
+import com.facebook.react.ReactInstanceManager;
+import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
+import com.lchli.angithub.GithubApp;
+
+public class BaseReactActivity extends BaseAppCompatActivity implements DefaultHardwareBackBtnHandler {
     /*
      * Get the ReactInstanceManager, AKA the bridge between JS and Android
      * We use a singleton here so we can reuse the instance throughout our app
@@ -14,7 +20,7 @@ public class BaseReactActivity extends BaseActivity implements DefaultHardwareBa
          * Get the reference to the ReactInstanceManager
          */
          mReactInstanceManager =
-                 ((MyApplication) getActivity().getApplication()).getReactNativeHost().getReactInstanceManager();
+                 ((GithubApp) getApplication()).getReactNativeHost().getReactInstanceManager();
     }
     @Override
     public void invokeDefaultOnBackPressed() {

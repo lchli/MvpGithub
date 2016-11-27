@@ -13,7 +13,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.lchli.angithub.Navigator;
 import com.lchli.angithub.R;
-import com.lchli.angithub.common.base.BaseFragment;
+import com.lchli.angithub.common.base.ViewPagerFragment;
 import com.lchli.angithub.common.constants.ServerConst;
 import com.lchli.angithub.common.utils.MapUtils;
 import com.lchli.angithub.common.utils.RefreshUtils;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RepoFragment extends BaseFragment {
+public class RepoFragment extends ViewPagerFragment {
 
 
   @BindView(R.id.my_repos_list_view)

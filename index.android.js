@@ -12,7 +12,8 @@ import {
   Text,
   View,
   ListView,
-  Button
+  Button,
+   Image
 } from 'react-native';
 
 
@@ -25,7 +26,7 @@ constructor(props) {
    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
       this.state = {
-      dataSource: ds.cloneWithRows(['445']),
+      dataSource: ds.cloneWithRows([]),
       dss:ds
 
 
@@ -35,30 +36,33 @@ constructor(props) {
 
   }
 
+  componentDidMount() {
+        this.onSearchChange();
+    }
+
+  componentWillUnmount() {
+       
+    }
+
 //get data source.
  getDataSource2(movies) {
         return this.state.dss.cloneWithRows(movies);
     }
 
 
-onSearchChange() {
+onSearchChange=()=>{
 
-  fetch('https://facebook.github.io/react-native/movies.json')
+  fetch('https://api.github.com/events')
       .then((response) => response.json())
       .then((responseJson) => {
 
-//var resultData = [];
-//            for (var i = 0, len = responseJson.movies.length; i < len; i++) {
-//                resultData.push(responseJson.movies[i]);
-//            }
-
   this.setState({
 
-                 dataSource: this.getDataSource2(responseJson.movies)
+                 dataSource: this.getDataSource2(responseJson)
              });
 
 
-        return responseJson.movies;
+        return responseJson;
       })
       .catch((error) => {
         console.error(error);
@@ -66,34 +70,29 @@ onSearchChange() {
   }
 
 
+renderRow=(jobj)=>{
 
+  return (
+    <View>
+     <Text>{jobj.created_at}</Text>
+    <Text>{jobj.actor.login}</Text>
+     <Text>{jobj.repo.name}</Text>
+    <Image source={{uri: jobj.actor.avatar_url}} style={{width: 40, height: 40}} />
+    </View>
+    )
+    
+}
 
 
 
   render() {
+    let that=this;
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!00000
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
-
-       <Button
-         onPress={this.onSearchChange.bind(this)}
-         title="Learn More"
-         color="#841584"
-         accessibilityLabel="Learn more about this purple button"
-       />
-
+       
         <ListView
                 dataSource={this.state.dataSource}
-                renderRow={(rowData) => <Text>{rowData.title}</Text>}
+                renderRow={(e)=>this.renderRow(e)}
               />
       </View>
     );

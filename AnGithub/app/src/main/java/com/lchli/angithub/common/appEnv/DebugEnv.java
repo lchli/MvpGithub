@@ -1,5 +1,7 @@
 package com.lchli.angithub.common.appEnv;
 
+import com.lchli.angithub.common.constants.Urlconst;
+
 /**
  * Created by lchli on 2016/10/26.
  */
@@ -7,7 +9,7 @@ package com.lchli.angithub.common.appEnv;
 public class DebugEnv implements AppEnvironment {
     @Override
     public String getIP() {
-        return "https://api.github.com";
+        return Urlconst.Hosts.GITHUB_DEBUG;
     }
 
     @Override

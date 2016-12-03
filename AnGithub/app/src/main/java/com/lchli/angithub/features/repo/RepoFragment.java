@@ -71,7 +71,7 @@ public class RepoFragment extends ViewPagerFragment {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mSearchController = new SearchController(searchCb);
+    mSearchController = new SearchController();
   }
 
   @Override
@@ -115,8 +115,8 @@ public class RepoFragment extends ViewPagerFragment {
       return;
     }
     isDataAlreadyLoaded = true;
+    // this will trigger onPullDownToRefresh to load data.
     RefreshUtils.setRefreshing(myReposListView, true);
-    refresh();
   }
 
   private CurrentUserInfoResponse getAccount() {
@@ -134,7 +134,7 @@ public class RepoFragment extends ViewPagerFragment {
     if (account == null) {
       return;
     }
-    mSearchController.refresh(buildSearchParams(account));
+    mSearchController.refresh(buildSearchParams(account),searchCb);
   }
 
   private void loadMore() {
@@ -142,7 +142,7 @@ public class RepoFragment extends ViewPagerFragment {
     if (account == null) {
       return;
     }
-    mSearchController.loadMore(buildSearchParams(account));
+    mSearchController.loadMore(buildSearchParams(account),searchCb);
   }
 
   private Map<String, String> buildSearchParams(CurrentUserInfoResponse account) {

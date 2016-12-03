@@ -81,7 +81,7 @@ public class MeFragment extends ViewPagerFragment {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mUserController = new UserController(userCb);
+    mUserController = new UserController();
   }
 
 
@@ -102,7 +102,7 @@ public class MeFragment extends ViewPagerFragment {
     pullRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
       @Override
       public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
-        mUserController.loadUserInfo();
+        mUserController.loadUserInfo(userCb);
       }
 
       @Override

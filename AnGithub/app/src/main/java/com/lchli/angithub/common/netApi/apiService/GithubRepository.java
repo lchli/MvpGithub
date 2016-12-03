@@ -15,7 +15,6 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
-import rx.Observable;
 
 /**
  * Created by lchli on 2016/10/29.
@@ -24,7 +23,7 @@ import rx.Observable;
 public interface GithubRepository {
 
   @GET(Urlconst.Github.PATH_SEARCH_REPOSITORIES)
-  Observable<ReposResponse> searchRepo(@QueryMap Map<String, String> params);
+  Call<ReposResponse> searchRepo(@QueryMap Map<String,String> params);
 
   @POST(Urlconst.Github.PATH_AUTHORIZATIONS)
   Call<AuthResponse> authorize(@Body AuthPostParam authPostParam,

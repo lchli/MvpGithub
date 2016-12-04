@@ -77,7 +77,7 @@ renderRow=(jobj)=>{
      <Text>{jobj.created_at}</Text>
     <Text>{jobj.actor.login}</Text>
      <Text>{jobj.repo.name}</Text>
-    <Image source={{uri: jobj.actor.avatar_url}} style={{width: 40, height: 40}} />
+    <Image source={{uri: jobj.actor.avatar_url}} style={{width: 40, height: 40}}/>
     </View>
     )
     

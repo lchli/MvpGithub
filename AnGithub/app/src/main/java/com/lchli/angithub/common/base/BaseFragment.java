@@ -3,13 +3,8 @@ package com.lchli.angithub.common.base;
 import android.support.v4.app.Fragment;
 
 /**
- * Created by lchli on 2016/8/10.
+ * Created by lichenghang on 16/11/27.
  */
-public abstract class BaseFragment extends Fragment {
 
-  public boolean isInitLoadDataCalled = false;
-
-  public void initLoadData() {
-
-  }
+public class BaseFragment extends Fragment {
 }

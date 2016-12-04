@@ -15,7 +15,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lchli.angithub.Navigator;
 import com.lchli.angithub.R;
-import com.lchli.angithub.common.base.BaseFragment;
+import com.lchli.angithub.common.base.ViewPagerFragment;
 import com.lchli.angithub.common.utils.EventBusUtils;
 import com.lchli.angithub.common.utils.RefreshUtils;
 import com.lchli.angithub.common.utils.ToastUtils;
@@ -33,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MeFragment extends BaseFragment {
+public class MeFragment extends ViewPagerFragment {
 
   @BindView(R.id.empty_view)
   CommonEmptyView emptyView;
@@ -55,16 +55,23 @@ public class MeFragment extends BaseFragment {
   PullToRefreshScrollView pullRefreshView;
 
   private UserController mUserController;
+  private boolean isDataAlreadyLoaded = false;
 
   private UserController.Callback userCb = new UserController.Callback() {
     @Override
     public void onFail(String msg) {
+      if (!isViewCreated) {
+        return;
+      }
       pullRefreshView.onRefreshComplete();
       ToastUtils.systemToast(msg);
     }
 
     @Override
     public void onSuccess(CurrentUserInfoResponse data) {
+      if (!isViewCreated) {
+        return;
+      }
       pullRefreshView.onRefreshComplete();
       refreshUi(data);
     }
@@ -74,14 +81,10 @@ public class MeFragment extends BaseFragment {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mUserController = new UserController(userCb);
+    mUserController = new UserController();
   }
 
-  @Override
-  public void onDestroy() {
-    super.onDestroy();
-    mUserController.unsubscripe();
-  }
+
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,7 +102,7 @@ public class MeFragment extends BaseFragment {
     pullRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
       @Override
       public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
-        mUserController.loadUserInfo();
+        mUserController.loadUserInfo(userCb);
       }
 
       @Override
@@ -111,17 +114,25 @@ public class MeFragment extends BaseFragment {
     return view;
   }
 
+
+
   @Override
-  public void initLoadData() {
-    isInitLoadDataCalled = true;
+  protected void whenVisibleToUser() {
+    if (isDataAlreadyLoaded) {
+      return;
+    }
+    isDataAlreadyLoaded = true;
+    // this will trigger onPullDownToRefresh to load data.
     RefreshUtils.setRefreshing(pullRefreshView, true);
-    mUserController.loadUserInfo();
   }
 
   @Override
   public void onDestroyView() {
-    super.onDestroyView();
+    mUserController.unsubscripe();
     EventBusUtils.unregister(this);
+    super.onDestroyView();
+    isDataAlreadyLoaded = false;
+
   }
 
   private void refreshUi(CurrentUserInfoResponse userInfo) {

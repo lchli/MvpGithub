@@ -76,7 +76,7 @@ public class LoginFragment extends Fragment {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mLoginController = new UserController(loginCb);
+    mLoginController = new UserController();
   }
 
   @Override
@@ -130,7 +130,7 @@ public class LoginFragment extends Fragment {
     }
 
     showProgress(true);
-    mLoginController.login(userName, password);
+    mLoginController.login(userName, password,loginCb);
 
   }
 

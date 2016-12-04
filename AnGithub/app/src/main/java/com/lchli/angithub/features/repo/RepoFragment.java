@@ -2,6 +2,7 @@ package com.lchli.angithub.features.repo;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.lchli.angithub.Navigator;
 import com.lchli.angithub.R;
-import com.lchli.angithub.common.base.BaseFragment;
+import com.lchli.angithub.common.base.ViewPagerFragment;
 import com.lchli.angithub.common.constants.ServerConst;
 import com.lchli.angithub.common.utils.MapUtils;
 import com.lchli.angithub.common.utils.RefreshUtils;
@@ -33,7 +34,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RepoFragment extends BaseFragment {
+public class RepoFragment extends ViewPagerFragment {
 
 
   @BindView(R.id.my_repos_list_view)
@@ -41,16 +42,23 @@ public class RepoFragment extends BaseFragment {
 
   private SearchReposAdapter mSearchReposAdapter;
   private SearchController mSearchController;
+  private boolean isDataAlreadyLoaded = false;
 
   private SearchController.Callback searchCb = new SearchController.Callback() {
     @Override
     public void onSucess(List<ReposResponse.Repo> items) {
+      if (!isViewCreated) {
+        return;
+      }
       RefreshUtils.onRefreshComplete(myReposListView);
       mSearchReposAdapter.refresh(items);
     }
 
     @Override
     public void onFail(String msg) {
+      if (!isViewCreated) {
+        return;
+      }
       RefreshUtils.onRefreshComplete(myReposListView);
       ToastUtils.systemToast(msg);
     }
@@ -60,13 +68,17 @@ public class RepoFragment extends BaseFragment {
     // Required empty public constructor
   }
 
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    mSearchController = new SearchController();
+  }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_repo, container, false);
     ButterKnife.bind(this, view);
-
 
     CommonEmptyView emptyView = new CommonEmptyView(getActivity());
     emptyView.addEmptyText(getString(R.string.empty_data), new View.OnClickListener() {
@@ -92,22 +104,19 @@ public class RepoFragment extends BaseFragment {
     mSearchReposAdapter = new SearchReposAdapter();
     myReposListView.setAdapter(mSearchReposAdapter);
 
-    mSearchController = new SearchController(searchCb);
-    view.post(new Runnable() {
-      @Override
-      public void run() {
-        initLoadData();
-      }
-    });
     return view;
   }
 
 
+
   @Override
-  public void initLoadData() {
-    isInitLoadDataCalled = true;
+  protected void whenVisibleToUser() {
+    if (isDataAlreadyLoaded) {
+      return;
+    }
+    isDataAlreadyLoaded = true;
+    // this will trigger onPullDownToRefresh to load data.
     RefreshUtils.setRefreshing(myReposListView, true);
-    refresh();
   }
 
   private CurrentUserInfoResponse getAccount() {
@@ -125,7 +134,7 @@ public class RepoFragment extends BaseFragment {
     if (account == null) {
       return;
     }
-    mSearchController.refresh(buildSearchParams(account));
+    mSearchController.refresh(buildSearchParams(account),searchCb);
   }
 
   private void loadMore() {
@@ -133,7 +142,7 @@ public class RepoFragment extends BaseFragment {
     if (account == null) {
       return;
     }
-    mSearchController.loadMore(buildSearchParams(account));
+    mSearchController.loadMore(buildSearchParams(account),searchCb);
   }
 
   private Map<String, String> buildSearchParams(CurrentUserInfoResponse account) {
@@ -147,6 +156,7 @@ public class RepoFragment extends BaseFragment {
   @Override
   public void onDestroyView() {
     mSearchController.unsubscripe();
+    isDataAlreadyLoaded=false;
     super.onDestroyView();
   }
 }

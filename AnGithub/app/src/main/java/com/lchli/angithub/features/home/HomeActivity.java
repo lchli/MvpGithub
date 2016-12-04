@@ -9,30 +9,21 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.lchli.angithub.Navigator;
 import com.lchli.angithub.R;
-import com.lchli.angithub.common.base.BaseAppCompatActivity;
-import com.lchli.angithub.common.base.BaseFragment;
+import com.lchli.angithub.common.base.BaseReactActivity;
 import com.lchli.angithub.common.base.FragmentAdapter;
-import com.lchli.angithub.common.constants.LocalConst;
 import com.lchli.angithub.common.netApi.FileClient;
-import com.lchli.angithub.common.utils.ToastUtils;
-import com.lchli.angithub.common.utils.UniversalLog;
 import com.lchli.angithub.features.events.EventsFragment;
 import com.lchli.angithub.features.me.views.MeFragment;
 import com.lchli.angithub.features.repo.RepoFragment;
-import com.zhy.http.okhttp.callback.FileCallBack;
-
-import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.Call;
 
-public class HomeActivity extends BaseAppCompatActivity {
+public class HomeActivity extends BaseReactActivity {
 
   @BindView(R.id.toolbar)
   Toolbar toolbar;
@@ -42,8 +33,10 @@ public class HomeActivity extends BaseAppCompatActivity {
   TabLayout tabs;
   @BindView(R.id.content_home)
   RelativeLayout contentHome;
-  @BindView(R.id.progressBar)
-  ProgressBar progressBar;
+
+
+  private FileClient.CancelableRunnable downloadRunnable;
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -59,35 +52,21 @@ public class HomeActivity extends BaseAppCompatActivity {
     adapter.addFragment(Fragment.instantiate(this, MeFragment.class.getName()), "me");
     viewpager.setAdapter(adapter);
     viewpager.setOffscreenPageLimit(adapter.getCount());
-    viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-      @Override
-      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-      }
-
-      @Override
-      public void onPageSelected(int position) {
-        Fragment current = adapter.getItem(position);
-        if (current != null && current instanceof BaseFragment) {
-          BaseFragment fragment = (BaseFragment) current;
-          if (!fragment.isInitLoadDataCalled) {
-            fragment.initLoadData();
-          }
-        }
-      }
-
-      @Override
-      public void onPageScrollStateChanged(int state) {
-
-      }
-    });
     tabs.setupWithViewPager(viewpager);
+
   }
 
+  @Override
+  public void finish() {
+    if (downloadRunnable != null) {
+      downloadRunnable.cancel();
+    }
+    super.finish();
+  }
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.home, menu);
     return true;
   }
@@ -112,27 +91,7 @@ public class HomeActivity extends BaseAppCompatActivity {
                 Navigator.toSearchRepo(activity());
                 break;
               case 1:
-                final String url = "http://" + "192.168.1.2" + ":9090" + "/UserPortraitDir/1.mp4";
-                FileClient.downloadFile(url, new FileCallBack(LocalConst.SD_PATH, "2.mp4") {
-                  @Override
-                  public void onError(Call call, Exception e, int id) {
-                    UniversalLog.get().e(e);
-                    ToastUtils.systemToast(e.getMessage());
-                  }
-
-                  @Override
-                  public void onResponse(File response, int id) {
-                    ToastUtils.systemToast("download onSuccess.");
-                  }
-
-                  @Override
-                  public void inProgress(float progress, long total, int id) {
-                    final int p= (int) (progress*100);
-                    UniversalLog.get().e(p+":"+Thread.currentThread().getName());
-                    progressBar.setProgress(p);
-                  }
-                });
-
+               // Navigator.toRepoDetail(activity());
                 break;
             }
 

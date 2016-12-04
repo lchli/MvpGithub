@@ -1,26 +1,24 @@
 package com.lchli.angithub.features.search.controller;
 
 import com.lchli.angithub.R;
+import com.lchli.angithub.common.base.BaseLoader;
 import com.lchli.angithub.common.constants.ServerConst;
 import com.lchli.angithub.common.netApi.RestClient;
 import com.lchli.angithub.common.netApi.apiService.GithubRepository;
+import com.lchli.angithub.common.netApi.callbacks.RetrofitCallback;
 import com.lchli.angithub.common.utils.ListUtils;
 import com.lchli.angithub.common.utils.Preconditions;
 import com.lchli.angithub.common.utils.ResUtils;
-import com.lchli.angithub.common.utils.UniversalLog;
 import com.lchli.angithub.features.search.bean.ReposResponse;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import rx.Observer;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import retrofit2.Call;
 
 import static junit.framework.Assert.assertNotNull;
 
@@ -28,32 +26,29 @@ import static junit.framework.Assert.assertNotNull;
  * Created by lchli on 2016/10/29.
  */
 
-public class SearchController {
+public class SearchController extends BaseLoader {
 
   private List<ReposResponse.Repo> repoList = new ArrayList<>();
   private int page = 1;
   private static final int PAGE_SIZE = 10;
   private boolean isHaveMore = true;
-  private Callback mCallback;
-  private final CompositeSubscription mCompositeSubscription;
+  private Call<ReposResponse> searchCall;
 
-  public SearchController(Callback mCallback) {
-    this.mCallback = Preconditions.checkNotNull(mCallback);
-    mCompositeSubscription = new CompositeSubscription();
-  }
 
-  public void refresh(Map<String, String> params) {
+  public void refresh(Map<String, String> params, Callback mCallback) {
+
     page = 1;
     isHaveMore = true;
     repoList.clear();
 
-    search(params);
+    search(params, mCallback);
   }
 
-  private void search(Map<String, String> params) {
+  private void search(Map<String, String> params, Callback callback) {
+
     assertNotNull(params);
     if (params.get("q") == null) {
-      mCallback.onFail(ResUtils.parseString(R.string.search_key_cannot_null));
+        callback.onFail(ResUtils.parseString(R.string.search_key_cannot_null));
       return;
     }
     Preconditions
@@ -64,57 +59,67 @@ public class SearchController {
     params.put("page", page + "");
     params.put("per_page", PAGE_SIZE + "");
 
-    unsubscripe();
-    Subscription subscription =
-        RestClient.instance().createService(GithubRepository.class).searchRepo(params)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Observer<ReposResponse>() {
-              @Override
-              public void onCompleted() {}
+    if (searchCall != null) {
+      searchCall.cancel();
+      searchCall = null;
+    }
 
-              @Override
-              public void onError(Throwable e) {
-                UniversalLog.get().e(e);
-                mCallback.onFail(e.getMessage());
-              }
+    Preconditions.checkNotNull(callback);
+    final WeakReference<Callback> cbRef = weakRefCallback(callback);
 
-              @Override
-              public void onNext(ReposResponse reposResponse) {
-                if (reposResponse == null) {
-                  mCallback.onFail("response is null.");
-                  return;
-                }
-                if (reposResponse.isHaveError()) {
-                  mCallback.onFail(reposResponse.message);
-                  return;
-                }
-                if (reposResponse.items == null || reposResponse.items.size() < PAGE_SIZE) {
-                  isHaveMore = false;
-                } else {
-                  page++;
-                }
-                if (!ListUtils.isEmpty(reposResponse.items)) {
-                  repoList.addAll(reposResponse.items);
-                }
-                mCallback.onSucess(repoList);
+    searchCall = RestClient.instance().createService(GithubRepository.class).searchRepo(params);
+    searchCall.enqueue(new RetrofitCallback<ReposResponse>() {
+      @Override
+      public void onSuccess(ReposResponse reposResponse) {
 
-              }
-            });
+        if (reposResponse.isHaveError()) {
+          Callback cb = cbRef.get();
+          if (cb != null) {
+            cb.onFail(reposResponse.message);
+          }
+          return;
+        }
+        if (reposResponse.items == null || reposResponse.items.size() < PAGE_SIZE) {
+          isHaveMore = false;
+        } else {
+          page++;
+        }
+        if (!ListUtils.isEmpty(reposResponse.items)) {
+          repoList.addAll(reposResponse.items);
+        }
+        Callback cb = cbRef.get();
+        if (cb != null) {
+          cb.onSucess(repoList);
+        }
+      }
 
-    mCompositeSubscription.add(subscription);
+      @Override
+      public void onFail(Throwable error) {
+        Callback cb = cbRef.get();
+        if (cb != null) {
+          cb.onFail(error.getMessage());
+        }
+      }
+    });
+
+
   }
 
-  public void loadMore(Map<String, String> params) {
+  public void loadMore(Map<String, String> params, Callback mCallback) {
     if (!isHaveMore) {
       mCallback.onFail(ResUtils.parseString(R.string.load_no_more_data));
       return;
     }
-    search(params);
+    search(params, mCallback);
   }
 
   public void unsubscripe() {
-    mCompositeSubscription.clear();
+
+    if (searchCall != null) {
+      searchCall.cancel();
+      searchCall = null;
+    }
+
   }
 
   public interface Callback {

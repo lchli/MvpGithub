@@ -115,18 +115,18 @@ public class SearchActivity extends BaseAppCompatActivity {
 
       @Override
       public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-        mSearchController.loadMore(buildSearchParams());
+        mSearchController.loadMore(buildSearchParams(),searchCb);
       }
     });
     mSearchReposAdapter = new SearchReposAdapter();
     searchListView.setAdapter(mSearchReposAdapter);
 
-    mSearchController = new SearchController(searchCb);
+    mSearchController = new SearchController();
 
   }
 
   private void refresh() {
-    mSearchController.refresh(buildSearchParams());
+    mSearchController.refresh(buildSearchParams(),searchCb);
   }
 
   private Map<String, String> buildSearchParams() {

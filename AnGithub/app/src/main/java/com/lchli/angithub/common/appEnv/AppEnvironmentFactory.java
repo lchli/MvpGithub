@@ -7,21 +7,37 @@ import com.lchli.angithub.BuildConfig;
  * Created by lchli on 2016/10/26.
  */
 
-public final class AppEnvironmentFactory {
+public class AppEnvironmentFactory implements AppEnvironment {
 
-    private static final AppEnvironment R = new ReleaseEnv();
-    private static final AppEnvironment D = new DebugEnv();
+  private AppEnvironment currentEnv = initEnv();
 
 
-    public static AppEnvironment getEnv() {
-        switch (BuildConfig.BUILD_TYPE) {
-            case "release":
-                return R;
-            case "debug":
-                return D;
-            default:
-                throw new RuntimeException("unregonized build type!!");
+  private AppEnvironment initEnv() {
+    switch (BuildConfig.BUILD_TYPE) {
+      case "release":
+        return new ReleaseEnv();
+      case "debug":
+        return new DebugEnv();
+      default:
+        throw new RuntimeException("unrecognized build type!!");
 
-        }
     }
+  }
+
+  private static AppEnvironmentFactory INS = new AppEnvironmentFactory();
+
+  public static AppEnvironmentFactory ins() {
+    return INS;
+  }
+
+
+  @Override
+  public String getIP() {
+    return currentEnv.getIP();
+  }
+
+  @Override
+  public boolean logFlag() {
+    return currentEnv.logFlag();
+  }
 }

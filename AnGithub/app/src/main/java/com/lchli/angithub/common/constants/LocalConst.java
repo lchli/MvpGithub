@@ -2,8 +2,6 @@ package com.lchli.angithub.common.constants;
 
 import android.os.Environment;
 
-import com.lchli.angithub.common.appEnv.AppEnvironmentFactory;
-
 /**
  * Created by lchli on 2016/11/1.
  */
@@ -17,6 +15,6 @@ public final class LocalConst {
     String NOTE = "AnGithub";
   }
 
-  public static final boolean LOG_FLAG = AppEnvironmentFactory.getEnv().logFlag();
+
   public static final String SD_PATH= Environment.getExternalStorageDirectory().getAbsolutePath();
 }

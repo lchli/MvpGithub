@@ -57,7 +57,7 @@ echo "type:${type}"
 cd AnGithub
 gradle clean assemble${type}
 
-uploadApk=`renameApk "./app/app-${type}"`
+uploadApk=`renameApk "./app/app-${type}.apk"`
 
 cd ..
 

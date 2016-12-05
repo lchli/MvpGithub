@@ -32,7 +32,7 @@ android {
             proguardFiles proguard
             minifyEnabled true
             zipAlignEnabled true
-            shrinkResources true
+            //shrinkResources true
             signingConfig signingConfigs.release
         }
 
@@ -40,7 +40,7 @@ android {
             proguardFiles proguard
             minifyEnabled false
             zipAlignEnabled true
-            shrinkResources true
+            //shrinkResources true
             signingConfig signingConfigs.debug
         }
     }

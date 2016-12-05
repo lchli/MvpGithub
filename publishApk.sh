@@ -56,13 +56,12 @@ echo "upload:${isUpload}"
 echo "type:${type}"
 
 cd AnGithub
-gradle clean assemble${type}
+gradle clean assemble${type}cc
 
 uploadApk=`renameApk "./app/build/outputs/apk/app-${type}.apk" ${type}`
 
 
 checkJq
-
 
 if [ ${isUpload} == "true" ]
 then

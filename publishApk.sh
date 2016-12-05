@@ -45,12 +45,21 @@ fi
 
 }
 
+isUpload=${isUpload}
+type=${type}
 
 echo "upload:${isUpload}"
+echo "type:${type}"
+
 cd AnGithub
-gradle build
+gradle clean assemble${type}
 
 cd ..
+
 checkJq
 uploadApk=`renameApk "./app.apk"`
+
+if [ $isUpload==true ]
+then
 uploadToPgyer ${uploadApk}
+fi

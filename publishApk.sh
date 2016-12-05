@@ -45,8 +45,8 @@ fi
 
 }
 
-
-
+echo $1
+echo ${isUpload}
 checkJq
 uploadApk=`renameApk "./app.apk"`
 uploadToPgyer ${uploadApk}

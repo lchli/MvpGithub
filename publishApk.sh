@@ -60,7 +60,6 @@ gradle clean assemble${type}
 
 uploadApk=`renameApk "./app/build/outputs/apk/app-${type}.apk" ${type}`
 
-cd ..
 
 checkJq
 

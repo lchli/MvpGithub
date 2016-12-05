@@ -94,7 +94,7 @@ dependencies {
 }
 
 def Properties props = new Properties()
-def propFile = new File('private.private')
+def propFile = new File('sig.private')
 if (propFile.canRead()) {
     props.load(new FileInputStream(propFile))
 }

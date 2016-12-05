@@ -28,7 +28,7 @@ android {
 
         File[] proguard = [new File('./', 'proguard-android.txt'), new File('./', 'proguard-rules.pro')]
 
-        release {
+        Product {
             proguardFiles proguard
             minifyEnabled true
             zipAlignEnabled true
@@ -36,7 +36,7 @@ android {
             signingConfig signingConfigs.release
         }
 
-        debug {
+        Test {
             proguardFiles proguard
             minifyEnabled false
             zipAlignEnabled true

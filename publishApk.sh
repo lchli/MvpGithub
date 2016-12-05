@@ -55,7 +55,8 @@ echo "upload:${isUpload}"
 echo "type:${type}"
 
 cd AnGithub
-gradle clean assemble${type}
+#gradle clean assemble${type}
+gradle build
 
 cd ..
 

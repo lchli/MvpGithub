@@ -47,7 +47,10 @@ fi
 
 
 echo "upload:${isUpload}"
-gradle build -I ./AnGithub/app/build.gradle
+cd AnGithub
+gradle build
+
+cd ..
 checkJq
 uploadApk=`renameApk "./app.apk"`
 uploadToPgyer ${uploadApk}

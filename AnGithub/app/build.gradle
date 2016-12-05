@@ -22,12 +22,12 @@ android {
 
         File[] proguard = [new File('./', 'proguard-android.txt'), new File('./', 'proguard-rules.pro')]
 
-        release {
+        TEST {
             minifyEnabled false
             proguardFiles proguard
         }
 
-        debug {
+        PRODUCT {
             minifyEnabled false
             proguardFiles proguard
         }

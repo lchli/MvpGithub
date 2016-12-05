@@ -59,7 +59,7 @@ cd ..
 checkJq
 uploadApk=`renameApk "./app.apk"`
 
-if [ $isUpload==true ]
+if [ $isUpload=="true" ]
 then
 uploadToPgyer ${uploadApk}
 fi

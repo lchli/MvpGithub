@@ -14,9 +14,9 @@ public class AppEnvironmentFactory implements AppEnvironment {
 
   private AppEnvironment initEnv() {
     switch (BuildConfig.BUILD_TYPE) {
-      case "release":
+      case "PRODUCT":
         return new ReleaseEnv();
-      case "debug":
+      case "TEST":
         return new DebugEnv();
       default:
         throw new RuntimeException("unrecognized build type!!");

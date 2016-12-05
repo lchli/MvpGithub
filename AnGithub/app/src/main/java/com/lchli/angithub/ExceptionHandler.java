@@ -9,8 +9,8 @@ import com.lchli.angithub.common.utils.UniversalLog;
 
 public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
 
-    // private static final String EXCEPTION_DIR = String.format("%s/%s", LocalConst.STUDY_APP_ROOT_DIR, "Exception");
-    //private static final String RECENT_EXCEPTION_FILE = String.format("%s/%s", EXCEPTION_DIR, "RecentException.txt");
+    // private.private static final String EXCEPTION_DIR = String.format("%s/%s", LocalConst.STUDY_APP_ROOT_DIR, "Exception");
+    //private.private static final String RECENT_EXCEPTION_FILE = String.format("%s/%s", EXCEPTION_DIR, "RecentException.txt");
 
     static {
         // FileUtils.mkdirs(new File(EXCEPTION_DIR));

@@ -1,0 +1,6 @@
+STORE_FILE=release_keystore.jks
+STORE_PASSWORD=878266
+KEY_ALIAS=githubkey
+KEY_PASSWORD=878266
+
+STORE_FILE_DEBUG=debug_keystore.jks

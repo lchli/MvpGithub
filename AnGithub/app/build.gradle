@@ -18,18 +18,30 @@ android {
         }
 
     }
+
+    signingConfigs {
+        release
+        debug
+    }
+
     buildTypes {
 
         File[] proguard = [new File('./', 'proguard-android.txt'), new File('./', 'proguard-rules.pro')]
 
-        TEST {
-            minifyEnabled false
+        release {
             proguardFiles proguard
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.release
         }
 
-        PRODUCT {
-            minifyEnabled false
+        debug {
             proguardFiles proguard
+            minifyEnabled false
+            zipAlignEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.debug
         }
     }
 
@@ -79,4 +91,28 @@ dependencies {
     compile domainDependencies."glide"
 
     compile "com.facebook.react:react-native:+"  // From node_modules
+}
+
+def Properties props = new Properties()
+def propFile = new File('private.private')
+if (propFile.canRead()) {
+    props.load(new FileInputStream(propFile))
+}
+
+if (props.containsKey('STORE_FILE')
+        && props.containsKey('STORE_PASSWORD')
+        && props.containsKey('KEY_ALIAS')
+        && props.containsKey('KEY_PASSWORD')) {
+    android.signingConfigs.release.storeFile = file(props['STORE_FILE'])
+    android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
+    android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
+    android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
+
+    android.signingConfigs.debug.storeFile = file(props['STORE_FILE_DEBUG'])
+    android.signingConfigs.debug.storePassword = props['STORE_PASSWORD']
+    android.signingConfigs.debug.keyAlias = props['KEY_ALIAS']
+    android.signingConfigs.debug.keyPassword = props['KEY_PASSWORD']
+} else {
+    println 'private.private not found or incomplete'
+    android.buildTypes.release.signingConfig = null
 }

@@ -24,6 +24,14 @@ android {
         debug
     }
 
+    def debugType = {
+        proguardFiles proguard
+        minifyEnabled false
+        zipAlignEnabled true
+        //shrinkResources true
+        signingConfig signingConfigs.debug
+    }
+
     buildTypes {
 
         File[] proguard = [new File('./', 'proguard-android.txt'), new File('./', 'proguard-rules.pro')]
@@ -37,11 +45,11 @@ android {
         }
 
         Test {
-            proguardFiles proguard
-            minifyEnabled false
-            zipAlignEnabled true
-            //shrinkResources true
-            signingConfig signingConfigs.debug
+            debugType
+        }
+
+        debug {
+            debugType
         }
     }
 

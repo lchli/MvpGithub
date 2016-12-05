@@ -19,7 +19,7 @@ public class AppEnvironmentFactory implements AppEnvironment {
       case "Test":
         return new DebugEnv();
       default:
-        throw new RuntimeException("unrecognized build type!!");
+        return new DebugEnv();
 
     }
   }

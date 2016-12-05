@@ -85,7 +85,6 @@ public class RepoFragment extends ViewPagerFragment {
       @Override
       public void onClick(View v) {
         RefreshUtils.setRefreshing(myReposListView, true);
-        refresh();
       }
     });
 
@@ -106,7 +105,6 @@ public class RepoFragment extends ViewPagerFragment {
 
     return view;
   }
-
 
 
   @Override

@@ -36,7 +36,7 @@ public class UniversalLog implements LogExt {
 
   };
 
-  private static String getExceptionStacktrace(Throwable ex) {
+  public static String getExceptionStacktrace(Throwable ex) {
     StringWriter stringWriter = new StringWriter();
     PrintWriter printWriter = new PrintWriter(stringWriter);
     ex.printStackTrace(printWriter);

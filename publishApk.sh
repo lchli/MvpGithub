@@ -3,7 +3,8 @@
 function renameApk {
 date_now=`date +%Y-%m-%d`
 srcApk=$1
-uploadApk="Github-production-${date_now}.apk"
+type=$2
+uploadApk="Github-$type-${date_now}.apk"
 mv ${srcApk} ${uploadApk}
 echo ${uploadApk}
 }
@@ -57,7 +58,7 @@ echo "type:${type}"
 cd AnGithub
 gradle clean assemble${type}
 
-uploadApk=`renameApk "./app/app-${type}.apk"`
+uploadApk=`renameApk "./app/build/outputs/apk/app-${type}.apk" $type`
 
 cd ..
 

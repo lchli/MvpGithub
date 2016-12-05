@@ -45,6 +45,8 @@ fi
 
 }
 
+source ~/.bashrc
+
 isUpload=${isUpload}
 type=${type}
 

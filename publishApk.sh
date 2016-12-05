@@ -4,7 +4,7 @@ function renameApk {
 date_now=`date +%Y-%m-%d`
 srcApk=$1
 type=$2
-uploadApk="Github-${type}-${date_now}.apk"
+uploadApk="./Github-${type}-${date_now}.apk"
 mv ${srcApk} ${uploadApk}
 echo ${uploadApk}
 }

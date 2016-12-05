@@ -46,6 +46,7 @@ fi
 }
 
 source ~/.bashrc
+npm install
 
 isUpload=${isUpload}
 type=${type}

@@ -63,7 +63,7 @@ checkCmdIfExists sendemail
 response=$1
 data=`echo ${response} | jq '.data'`
 
-appName=`echo ${data} | jq '.appName'`
+appName=`echo ${response} | jq '.data.appName'`
 appVersion=`echo ${data} | jq '.appVersion'`
 appVersionNo=`echo ${data} | jq '.appVersionNo'`
 appQRCodeURL=`echo ${data} | jq '.appQRCodeURL'`

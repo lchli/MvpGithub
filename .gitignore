@@ -37,7 +37,7 @@ captures/
 .idea/workspace.xml
 
 # Keystore files
-*.jks
+
 #node.js
 node_modules/
 npm-debug.log

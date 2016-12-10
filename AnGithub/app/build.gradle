@@ -108,7 +108,7 @@ dependencies {
 }
 
 def Properties props = new Properties()
-def propFile = new File('sig.private')
+def propFile = new File('sigin.properties')
 if (propFile.canRead()) {
     props.load(new FileInputStream(propFile))
 }
@@ -130,7 +130,7 @@ if (props.containsKey('STORE_FILE')
     android.signingConfigs.debug.keyPassword = props['KEY_PASSWORD']
 
 } else {
-    println 'sig.private not found or incomplete'
+    println 'sig.properties not found or incomplete'
     android.buildTypes.release.signingConfig = null
     android.buildTypes.debug.signingConfig = null
 }

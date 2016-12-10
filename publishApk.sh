@@ -27,7 +27,7 @@ echo ${response}
 code=`echo ${response} | jq '.code'`
 message=`echo ${response} | jq '.message'`
 
-if [[ ${code} -eq 0 ]]
+if [ ${code} -eq 0 ]
 then
 echo "-------------------------upload success----------------------"
 sendMyEmail response

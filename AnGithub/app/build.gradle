@@ -130,7 +130,7 @@ if (props.containsKey('STORE_FILE')
     android.signingConfigs.debug.keyPassword = props['KEY_PASSWORD']
 
 } else {
-    println 'sig.properties not found or incomplete'
+    println 'sigin.properties not found or incomplete'
     android.buildTypes.release.signingConfig = null
     android.buildTypes.debug.signingConfig = null
 }

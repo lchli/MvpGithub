@@ -6,6 +6,7 @@ apply plugin: 'android-apt'
 android {
     compileSdkVersion project.ext.compileSdkVersion
     buildToolsVersion project.ext.buildToolsVersion
+
     defaultConfig {
         applicationId "com.lchli.angithub"
         minSdkVersion project.ext.minSdkVersion

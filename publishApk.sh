@@ -61,12 +61,19 @@ function sendMyEmail {
 checkCmdIfExists sendemail
 
 response=$1
+data=`echo ${response} | jq '.data'`
 
-content="appName gerrit\n
-appVersion git.intra.ffan.com\n
-appVersionNo ${gerritUsername}"
+appName=`echo ${data} | jq '.appName'`
+appVersion=`echo ${data} | jq '.appVersion'`
+appVersionNo=`echo ${data} | jq '.appVersionNo'`
+appQRCodeURL=`echo ${data} | jq '.appQRCodeURL'`
 
-curl -o qr.jpg https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo_top_ca79a146.png
+
+content="appName:${appName}\n
+appVersion:${appVersion}\n
+appVersionNo:${appVersionNo}\n"
+
+curl -o qr.jpg ${appQRCodeURL}
 
 sendemail -s mail.sohu.com \
 -f lchli888@sohu.com \

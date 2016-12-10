@@ -48,7 +48,7 @@ content="appName:${appName}\n
 appVersion:${appVersion}\n
 appVersionNo:${appVersionNo}\n"
 
-curl -o qr.jpg "${appQRCodeURL}"
+curl -o "qr.jpg" $appQRCodeURL
 
 sendemail -s mail.sohu.com \
 -f lchli888@sohu.com \

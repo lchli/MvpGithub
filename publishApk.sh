@@ -30,7 +30,7 @@ message=`echo ${response} | jq '.message'`
 if [ ${code} -eq 0 ]
 then
 echo "-------------------------upload success----------------------"
-sendMyEmail response
+sendMyEmail ${response}
 
 else
 echo "--------------------upload fail:$message-----------------------"

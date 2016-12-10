@@ -49,14 +49,14 @@ qrjpg="qr.jpg"
 
 curl -o $qrjpg $appQRCodeURL
 
-sendemail -s mail.sohu.com \
--f lchli888@sohu.com \
--t lchli888@sohu.com \
+sendemail -s $smtp \
+-f $emailSender \
+-t $emailReceivers \
 -u "apk upload successful." \
 -m $content \
 -o message-charset="utf-8" \
--xu lchli888@sohu.com \
--xp lchli878266 \
+-xu $emailSender \
+-xp $emailPwd \
 -o tls=auto \
 -a $qrjpg
 
@@ -97,9 +97,14 @@ isUpload=${isUpload}
 type=${type}
 apiKey=${apiKey}
 uKey=${uKey}
+emailSender=${emailSender}
+emailPwd=${emailPwd}
+emailReceivers=${emailReceivers}
+smtp=${smtp}
 
 echo "upload:${isUpload}"
 echo "type:${type}"
+echo "emailReceivers:${emailReceivers}"
 
 cd AnGithub
 gradle clean assemble${type}

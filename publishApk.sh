@@ -41,12 +41,15 @@ appName=`echo ${data} | jq '.appName'`
 appVersion=`echo ${data} | jq '.appVersion'`
 appVersionNo=`echo ${data} | jq '.appVersionNo'`
 appQRCodeURL=`echo ${data} | jq '.appQRCodeURL'`
+appQRCodeURL=`echo -e $appQRCodeURL`
 
 echo "appQRCodeURL:$appQRCodeURL"
 
 content="appName:${appName}\n
 appVersion:${appVersion}\n
-appVersionNo:${appVersionNo}\n"
+appVersionNo:${appVersionNo}\n
+appQRCodeURL:${appQRCodeURL}\n
+"
 
 curl -o "qr.jpg" $appQRCodeURL
 

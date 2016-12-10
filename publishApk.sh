@@ -41,7 +41,8 @@ appName=`echo ${data} | jq '.appName'`
 appVersion=`echo ${data} | jq '.appVersion'`
 appVersionNo=`echo ${data} | jq '.appVersionNo'`
 appQRCodeURL=`echo ${data} | jq '.appQRCodeURL'`
-appQRCodeURL=`echo -e $appQRCodeURL`
+len=${#appQRCodeURL}
+appQRCodeURL=${appQRCodeURL:1:$[len-2]}
 
 echo "appQRCodeURL:$appQRCodeURL"
 

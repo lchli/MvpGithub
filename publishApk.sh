@@ -88,6 +88,13 @@ fi
 
 }
 
+function installReactBundle {
+
+react-native bundle --platform android --dev false --entry-file index.android.js \
+  --bundle-output AnGithub/app/src/main/assets/index.android.bundle \
+  --assets-dest AnGithub/app/src/main/res/
+
+}
 
 
 source ~/.bashrc
@@ -107,6 +114,8 @@ srcApk="./app/build/outputs/apk/app-${type}.apk"
 
 echo "upload:${isUpload}"
 echo "type:${type}"
+
+installReactBundle
 
 cd AnGithub
 gradle clean assemble${type}

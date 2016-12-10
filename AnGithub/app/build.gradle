@@ -121,12 +121,12 @@ if (props.containsKey('STORE_FILE')
         && props.containsKey('KEY_PASSWORD')
         && props.containsKey('STORE_FILE_DEBUG')) {
 
-    android.signingConfigs.release.storeFile = file(props['STORE_FILE'])
+    android.signingConfigs.release.storeFile = new File(projectDir,props['STORE_FILE'])
     android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
     android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
     android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
 
-    android.signingConfigs.debug.storeFile = file(props['STORE_FILE_DEBUG'])
+    android.signingConfigs.debug.storeFile = new File(projectDir,props['STORE_FILE_DEBUG'])
     android.signingConfigs.debug.storePassword = props['STORE_PASSWORD']
     android.signingConfigs.debug.keyAlias = props['KEY_ALIAS']
     android.signingConfigs.debug.keyPassword = props['KEY_PASSWORD']

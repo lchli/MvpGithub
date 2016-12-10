@@ -24,6 +24,8 @@ android {
         debug
     }
 
+    File[] proguard = [new File('./', 'proguard-android.txt'), new File('./', 'proguard-rules.pro')]
+
     def debugType = {
         proguardFiles proguard
         minifyEnabled false
@@ -32,16 +34,19 @@ android {
         signingConfig signingConfigs.debug
     }
 
+    def releaseType={
+        proguardFiles proguard
+        minifyEnabled true
+        zipAlignEnabled true
+        //shrinkResources true
+        signingConfig signingConfigs.release
+    }
+
     buildTypes {
 
-        File[] proguard = [new File('./', 'proguard-android.txt'), new File('./', 'proguard-rules.pro')]
 
         Product {
-            proguardFiles proguard
-            minifyEnabled true
-            zipAlignEnabled true
-            //shrinkResources true
-            signingConfig signingConfigs.release
+            releaseType
         }
 
         Test {
@@ -76,7 +81,7 @@ dependencies {
     androidTestCompile(androidTestDependencies.espresso, {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile "junit:junit:4.8.2"
+    compile testDependencies.junit
     testCompile testDependencies.mockito
     testCompile testDependencies.robolectric
     //support.
@@ -97,8 +102,9 @@ dependencies {
     compile domainDependencies."pullRefresh"
     compile domainDependencies."eventbus"
     compile domainDependencies."glide"
+    compile domainDependencies."react-native"
 
-    compile "com.facebook.react:react-native:+"  // From node_modules
+
 }
 
 def Properties props = new Properties()
@@ -110,7 +116,9 @@ if (propFile.canRead()) {
 if (props.containsKey('STORE_FILE')
         && props.containsKey('STORE_PASSWORD')
         && props.containsKey('KEY_ALIAS')
-        && props.containsKey('KEY_PASSWORD')) {
+        && props.containsKey('KEY_PASSWORD')
+        && props.containsKey('STORE_FILE_DEBUG')) {
+
     android.signingConfigs.release.storeFile = file(props['STORE_FILE'])
     android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
     android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
@@ -120,7 +128,9 @@ if (props.containsKey('STORE_FILE')
     android.signingConfigs.debug.storePassword = props['STORE_PASSWORD']
     android.signingConfigs.debug.keyAlias = props['KEY_ALIAS']
     android.signingConfigs.debug.keyPassword = props['KEY_PASSWORD']
+
 } else {
-    println 'private.private not found or incomplete'
+    println 'sig.private not found or incomplete'
     android.buildTypes.release.signingConfig = null
+    android.buildTypes.debug.signingConfig = null
 }

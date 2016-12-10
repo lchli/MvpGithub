@@ -46,7 +46,11 @@ android {
 
 
         Product {
-            releaseType
+            proguardFiles proguard
+            minifyEnabled false
+            zipAlignEnabled true
+            //shrinkResources true
+            signingConfig signingConfigs.release
         }
 
         Test {

@@ -14,9 +14,9 @@ public class AppEnvironmentFactory implements AppEnvironment {
 
   private AppEnvironment initEnv() {
     switch (BuildConfig.BUILD_TYPE) {
-      case "Product":
+      case "release":
         return new ReleaseEnv();
-      case "Test":
+      case "debug":
         return new DebugEnv();
       default:
         return new DebugEnv();

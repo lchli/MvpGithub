@@ -42,13 +42,13 @@ appVersion=`echo ${data} | jq '.appVersion'`
 appVersionNo=`echo ${data} | jq '.appVersionNo'`
 appQRCodeURL=`echo ${data} | jq '.appQRCodeURL'`
 
-echo "appname:$appVersion"
+echo "appQRCodeURL:$appQRCodeURL"
 
 content="appName:${appName}\n
 appVersion:${appVersion}\n
 appVersionNo:${appVersionNo}\n"
 
-curl -o qr.jpg ${appQRCodeURL}
+curl -o qr.jpg "${appQRCodeURL}"
 
 sendemail -s mail.sohu.com \
 -f lchli888@sohu.com \
@@ -111,3 +111,4 @@ if [ ${isUpload} == "true" ]
 then
 uploadToPgyer ${uploadApk}
 fi
+

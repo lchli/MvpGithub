@@ -36,7 +36,7 @@ android {
 
     def releaseType={
         proguardFiles proguard
-        minifyEnabled true
+        minifyEnabled false
         zipAlignEnabled true
         //shrinkResources true
         signingConfig signingConfigs.release

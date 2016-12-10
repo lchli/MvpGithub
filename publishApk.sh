@@ -60,14 +60,16 @@ function sendMyEmail {
 
 checkCmdIfExists sendemail
 
-response=$1
-data=`echo ${response} | jq '.data'`
+#response='{"code":0,"message":"","data":{"appKey":"4219938977f5d89b20a9a844c94353c1","userKey":"230f24fc2963f346d21e9364dea95be2","appType":"2","appIsLastest":"1","appFileSize":"8867010","appName":"AnGithub","appVersion":"1.0","appVersionNo":"1","appBuildVersion":"4","appIdentifier":"com.lchli.angithub","appIcon":"fbd57845d4fb8fd161b67571e2e573e9","appDescription":"","appUpdateDescription":"","appScreenshots":"","appShortcutUrl":"B2nb","appCreated":"2016-12-10 14:42:31","appUpdated":"2016-12-10 14:42:31","appQRCodeURL":"http:\/\/static.pgyer.com\/app\/qrcodeHistory\/da8081f1c2247119274fc6a67e59c213807d81a9a99c20227c554d4820beea12"}}'
+data=`echo $1 | jq '.data'`
+echo "data:$data"
 
-appName=`echo ${response} | jq '.data.appName'`
+appName=`echo ${data} | jq '.appName'`
 appVersion=`echo ${data} | jq '.appVersion'`
 appVersionNo=`echo ${data} | jq '.appVersionNo'`
 appQRCodeURL=`echo ${data} | jq '.appQRCodeURL'`
 
+echo "appname:$appVersion"
 
 content="appName:${appName}\n
 appVersion:${appVersion}\n

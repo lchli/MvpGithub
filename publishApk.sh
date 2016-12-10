@@ -15,12 +15,8 @@ function uploadToPgyer {
 
 checkCmdIfExists jq
 
-uploadApk=${1}
 
-apiKey="55c2a4cbc4726d35f7740ff61a60061b"
-uKey="230f24fc2963f346d21e9364dea95be2"
-
-url="http://www.pgyer.com/apiv1/app/upload"
+local url="http://www.pgyer.com/apiv1/app/upload"
 
 response=$(curl -F "file=@${uploadApk}" -F "uKey=${uKey}" -F "_api_key=${apiKey}" ${url})
 echo ${response}
@@ -61,7 +57,7 @@ sendemail -s mail.sohu.com \
 -o message-charset="utf-8" \
 -xu lchli888@sohu.com \
 -xp lchli878266 \
--o tls=no \
+-o tls=auto \
 -a $qrjpg
 
 ##############send email end########################
@@ -78,7 +74,7 @@ fi
 
 function checkCmdIfExists {
 
-cmd=$1
+local cmd=$1
 res=`type ${cmd}`
 
 if [ $? -ne 0 ]
@@ -99,6 +95,8 @@ npm install
 
 isUpload=${isUpload}
 type=${type}
+apiKey=${apiKey}
+uKey=${uKey}
 
 echo "upload:${isUpload}"
 echo "type:${type}"
@@ -112,6 +110,6 @@ uploadApk=`renameApk "./app/build/outputs/apk/app-${type}.apk" ${type}`
 
 if [ ${isUpload} == "true" ]
 then
-uploadToPgyer ${uploadApk}
+uploadToPgyer
 fi
 

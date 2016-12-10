@@ -108,7 +108,7 @@ dependencies {
 }
 
 def Properties props = new Properties()
-def propFile = new File('sigin.properties')
+def propFile = new File('./sigin.properties')
 
 println("sign file exist?:"+propFile.exists())
 

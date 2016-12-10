@@ -44,15 +44,14 @@ appQRCodeURL=`echo ${data} | jq '.appQRCodeURL'`
 len=${#appQRCodeURL}
 appQRCodeURL=${appQRCodeURL:1:$[len-2]}
 
-echo "appQRCodeURL:$appQRCodeURL"
-
 content="appName:${appName}\n
 appVersion:${appVersion}\n
 appVersionNo:${appVersionNo}\n
 appQRCodeURL:${appQRCodeURL}\n
 "
+qrjpg="qr.jpg"
 
-curl -o "qr.jpg" $appQRCodeURL
+curl -o $qrjpg $appQRCodeURL
 
 sendemail -s mail.sohu.com \
 -f lchli888@sohu.com \
@@ -63,7 +62,7 @@ sendemail -s mail.sohu.com \
 -xu lchli888@sohu.com \
 -xp lchli878266 \
 -o tls=no \
--a qr.jpg
+-a $qrjpg
 
 ##############send email end########################
 else

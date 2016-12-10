@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
 function renameApk {
+
 date_now=`date +%Y-%m-%d`
-srcApk=$1
-type=$2
+
 uploadApk="./app/build/outputs/apk//Github-${type}-${date_now}.apk"
 mv ${srcApk} ${uploadApk}
 echo ${uploadApk}
+
 }
 
 
@@ -102,14 +103,15 @@ emailPwd=${emailPwd}
 emailReceivers=${emailReceivers}
 smtp=${smtp}
 
+srcApk="./app/build/outputs/apk/app-${type}.apk"
+
 echo "upload:${isUpload}"
 echo "type:${type}"
-echo "emailReceivers:${emailReceivers}"
 
 cd AnGithub
 gradle clean assemble${type}
 
-uploadApk=`renameApk "./app/build/outputs/apk/app-${type}.apk" ${type}`
+renameApk
 
 
 

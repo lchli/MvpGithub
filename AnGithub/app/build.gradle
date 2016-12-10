@@ -109,6 +109,9 @@ dependencies {
 
 def Properties props = new Properties()
 def propFile = new File('sigin.properties')
+
+println("sign file exist?:"+propFile.exists())
+
 if (propFile.canRead()) {
     props.load(new FileInputStream(propFile))
 }

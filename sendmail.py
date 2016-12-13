@@ -2,10 +2,12 @@
 
 import smtplib
 import sys
+import json
 from email.mime.text import MIMEText
 from email.header import Header
 from email.mime.multipart import MIMEMultipart
 import argparse
+import urllib
 
 print("count:"+sys.argv)
 
@@ -15,12 +17,18 @@ parser.add_argument("-s", "--smtp", type=str, help="the smtp")
 parser.add_argument("-f", "--emailSender", type=str, help="the emailSender")
 parser.add_argument("-t", "--emailReceivers", type=str, help="the emailReceivers")
 parser.add_argument("-u", "--subject", type=str, help="the subject")
-parser.add_argument("-m", "--content", type=str, help="the content")
+#parser.add_argument("-m", "--content", type=str, help="the content")
 parser.add_argument("-xp", "--emailPwd", type=str, help="the emailPwd")
-parser.add_argument("-a", "--qrjpg", type=str, help="the qrjpg")
+parser.add_argument("-res", "--res", type=str, help="the response")
 
 args = parser.parse_args()
 print(args)
+
+res = args.res
+response = json.loads(res)
+print(response)
+data=response['data']
+urllib.urlretrieve(data['appQRCodeURL'], "qr.jpg")
 
 
 

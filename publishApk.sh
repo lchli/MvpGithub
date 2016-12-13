@@ -22,6 +22,10 @@ local url="http://www.pgyer.com/apiv1/app/upload"
 response=$(curl -F "file=@${uploadApk}" -F "uKey=${uKey}" -F "_api_key=${apiKey}" ${url})
 echo ${response}
 
+chmod +x ../sendmail.py
+../sendmail.py -res ${response}
+exit
+
 code=`echo ${response} | jq '.code'`
 message=`echo ${response} | jq '.message'`
 

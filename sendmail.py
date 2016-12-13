@@ -7,6 +7,9 @@ from email.header import Header
 from email.mime.multipart import MIMEMultipart
 import argparse
 
+print("count:"+sys.argv)
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument("-s", "--smtp", type=str, help="the smtp")
 parser.add_argument("-f", "--emailSender", type=str, help="the emailSender")
@@ -18,6 +21,7 @@ parser.add_argument("-a", "--qrjpg", type=str, help="the qrjpg")
 
 args = parser.parse_args()
 print(args)
+
 
 
 smtp = args.smtp

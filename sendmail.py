@@ -8,8 +8,9 @@ from email.header import Header
 from email.mime.multipart import MIMEMultipart
 import argparse
 import urllib
-import urllib2
+import urllib.request
 import time
+from poster.encode import multipart_encode
 
 
 
@@ -58,8 +59,8 @@ if isUpload != 'true':
 url="http://www.pgyer.com/apiv1/app/upload"
 params = {'file': open(uploadApk, "rb"),'uKey': uKey,'_api_key': apiKey}
 datagen, headers = poster.encode.multipart_encode(params)
-request = urllib2.Request(url, datagen, headers)
-responseJson = urllib2.urlopen(request)
+request = urllib.Request(url, datagen, headers)
+responseJson = urllib.request.urlopen(request)
 
 response = json.loads(responseJson)
 print(response)

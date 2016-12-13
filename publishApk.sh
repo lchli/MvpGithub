@@ -50,7 +50,8 @@ qrjpg="qr.jpg"
 
 curl -o $qrjpg $appQRCodeURL
 
-sendemail -s $smtp \
+chmod +x ./sendmail.py
+./sendmail.py -s $smtp \
 -f $emailSender \
 -t $emailReceivers \
 -u "apk upload successful." \

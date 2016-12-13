@@ -50,7 +50,7 @@ msg.attach(att1)
 
 # receives = ['996863054@qq.com', 'lchli888@sohu.com', 'lichenghang@wanda.cn']
 msg['Subject'] = subject
-rec=emailReceivers.split(" ")
+rec=emailReceivers.split(",")
 
 conn.sendmail(emailSender,rec,
               msg.as_string())

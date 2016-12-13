@@ -12,8 +12,7 @@ import urllib.request
 import time
 from poster.encode import multipart_encode
 
-
-
+import MultipartPostHandler, cookielib
 
 parser = argparse.ArgumentParser()
 
@@ -60,6 +59,8 @@ url="http://www.pgyer.com/apiv1/app/upload"
 params = {'file': open(uploadApk, "rb"),'uKey': uKey,'_api_key': apiKey}
 datagen, headers = poster.encode.multipart_encode(params)
 request = urllib.Request(url, datagen, headers)
+
+
 responseJson = urllib.request.urlopen(request)
 
 response = json.loads(responseJson)

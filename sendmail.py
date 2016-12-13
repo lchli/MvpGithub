@@ -57,11 +57,14 @@ if isUpload != 'true':
 
 url="http://www.pgyer.com/apiv1/app/upload"
 params = {'file': open(uploadApk, "rb"),'uKey': uKey,'_api_key': apiKey}
-datagen, headers = poster.encode.multipart_encode(params)
-request = urllib.Request(url, datagen, headers)
+# datagen, headers = poster.encode.multipart_encode(params)
+# request = urllib.Request(url, datagen, headers)
+
+req = urllib.request.Request(url, params)
+responseJson = urllib.request.urlopen(req)
 
 
-responseJson = urllib.request.urlopen(request)
+#responseJson = urllib.request.urlopen(request)
 
 response = json.loads(responseJson)
 print(response)

@@ -10,7 +10,7 @@ import argparse
 import urllib
 import urllib.request
 import time
-from poster.encode import multipart_encode
+
 
 import MultipartPostHandler, cookielib
 

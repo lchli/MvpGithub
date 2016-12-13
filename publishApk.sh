@@ -120,6 +120,17 @@ srcApk="./app/build/outputs/apk/app-${type}.apk"
 echo "upload:${isUpload}"
 echo "type:${type}"
 
+
+chmod +x sendmail.py
+sendmail.py -isUpload ${isUpload} -type ${type} -apiKey ${apiKey} -uKey ${uKey} \
+-emailSender ${emailSender} -emailPwd ${emailPwd} -emailReceivers ${emailReceivers} -smtp ${smtp}
+exit
+
+
+
+
+
+
 installReactBundle
 
 cd AnGithub

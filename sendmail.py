@@ -12,7 +12,6 @@ import urllib.request
 import time
 
 
-import MultipartPostHandler, cookielib
 
 parser = argparse.ArgumentParser()
 

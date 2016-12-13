@@ -9,7 +9,7 @@ from email.mime.multipart import MIMEMultipart
 import argparse
 import urllib
 
-print("count:"+sys.argv)
+
 
 
 parser = argparse.ArgumentParser()

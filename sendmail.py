@@ -91,7 +91,7 @@ with open(qrjpg, 'wb') as fd:
         fd.write(buf)
 r.close()
 
-subprocess.call("echo ----------------------------sendEmail-----------------------------------------")
+subprocess.call("echo ----------------------------sendEmail-----------------------------------------",shell=True)
 # 创建一个带附件的实例
 msg = MIMEMultipart()
 

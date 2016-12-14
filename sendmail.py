@@ -75,8 +75,8 @@ data = {
 }
 files = {'file': open(uploadApk, 'rb')}
 
-responseJson = requests.post(url, data=data, files=files)
-response = json.loads(responseJson)
+response = requests.post(url, data=data, files=files).json()
+#response = json.loads(responseJson)
 print(response)
 
 if response['code'] != 0:

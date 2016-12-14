@@ -44,8 +44,6 @@ emailPwd = args.emailPwd
 emailReceivers = args.emailReceivers
 smtp = args.smtp
 worksp = args.worksp
-#worksp="/Users/lichenghang/.jenkins/workspace/github"
-#type="debug"
 
 srcApk = "{0}/AnGithub/app/build/outputs/apk/app-{1}.apk".format(worksp,type)
 date = time.strftime('%Y-%m-%d', time.localtime(time.time()))
@@ -78,7 +76,6 @@ data = {
 files = {'file': open(uploadApk, 'rb')}
 
 response = requests.post(url, data=data, files=files).json()
-#response = json.loads(responseJson)
 print(response)
 
 if response['code'] != 0:
@@ -104,7 +101,7 @@ att1["Content-Type"] = 'application/octet-stream'
 att1["Content-Disposition"] = 'attachment; filename="qrcode"'  # 这里的filename可以任意写，写什么名字，邮件中显示什么名字
 
 server = smtp
-conn = smtplib.SMTP(server, 587)
+conn = smtplib.SMTP(server)
 conn.starttls()
 user, password = (emailSender, emailPwd)
 conn.login(user, password)
@@ -117,6 +114,7 @@ msg.attach(att1)
 # receives = ['996863054@qq.com', 'lchli888@sohu.com', 'lichenghang@wanda.cn']
 msg['Subject'] = "upload success."
 rec = emailReceivers.split(",")
+print(rec)
 
 conn.sendmail(emailSender, rec,
               msg.as_string())

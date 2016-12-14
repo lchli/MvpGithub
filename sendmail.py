@@ -11,12 +11,14 @@ import urllib
 import time
 import subprocess
 import os
+import requests
 
 
 def checkCmdExe(status, output):
     if status != 0:
         print(output)
         exit()
+
 
 parser = argparse.ArgumentParser()
 
@@ -42,42 +44,38 @@ emailPwd = args.emailPwd
 emailReceivers = args.emailReceivers
 smtp = args.smtp
 worksp = args.worksp
+#worksp="/Users/lichenghang/.jenkins/workspace/github"
+#type="debug"
 
-srcApk = "./app/build/outputs/apk/app-{0}.apk".format(type)
+srcApk = "{0}/AnGithub/app/build/outputs/apk/app-{1}.apk".format(worksp,type)
 date = time.strftime('%Y-%m-%d', time.localtime(time.time()))
-uploadApk = "./app/build/outputs/apk//Github-{0}-{1}.apk".format(type, date)
+uploadApk = "{0}/AnGithub/app/build/outputs/apk//Github-{1}-{2}.apk".format(worksp,type, date)
 
-(status, output) = subprocess.getstatusoutput('source ~/.bashrc')
-checkCmdExe(status, output)
-(status, output) = subprocess.getstatusoutput('cd {0}'.format(worksp))
-checkCmdExe(status, output)
+status=subprocess.call("cd {0} && npm install".format(worksp),shell=True)
+checkCmdExe(status,"fail.")
 
-(status, output) = subprocess.getstatusoutput('npm install')
-checkCmdExe(status, output)
-
-(status, output) = subprocess.getstatusoutput('react-native bundle --platform android --dev false --entry-file index.android.js \
+status = subprocess.call('cd {0} && react-native bundle --platform android --dev false --entry-file index.android.js \
   --bundle-output AnGithub/app/src/main/assets/index.android.bundle \
-  --assets-dest AnGithub/app/src/main/res/')
-checkCmdExe(status, output)
+  --assets-dest AnGithub/app/src/main/res/'.format(worksp),shell=True)
+checkCmdExe(status,"fail.")
 
-(status, output) = subprocess.getstatusoutput('ls && cd AnGithub')
-checkCmdExe(status, output)
-
-(status, output) = subprocess.getstatusoutput('gradle clean assemble{0}'.format(type))
-checkCmdExe(status, output)
+status = subprocess.call('source ~/.bashrc && cd {0}/AnGithub && gradle clean assemble{1}'.format(worksp,type),shell=True)
+checkCmdExe(status,"fail.")
 
 os.rename(srcApk, uploadApk)
 
 if isUpload != 'true':
     exit()
-
+# -----------------Upload---------------------------------------------
 url = "http://www.pgyer.com/apiv1/app/upload"
-params = {'file': open(uploadApk, "rb"), 'uKey': uKey, '_api_key': apiKey}
-datagen, headers = poster.encode.multipart_encode(params)
-request = urllib.Request(url, datagen, headers)
 
-responseJson = urllib.request.urlopen(request)
+data = {
+    'uKey': uKey,
+    '_api_key': apiKey,
+}
+files = {'file': open(uploadApk, 'rb')}
 
+responseJson = requests.post(url, data=data, files=files)
 response = json.loads(responseJson)
 print(response)
 
@@ -89,6 +87,7 @@ data = response['data']
 qrjpg = "qr.jpg"
 urllib.urlretrieve(data['appQRCodeURL'], qrjpg)
 
+# -----------------sendEmail---------------------------------------------
 # 创建一个带附件的实例
 msg = MIMEMultipart()
 
@@ -115,5 +114,3 @@ rec = emailReceivers.split(",")
 conn.sendmail(emailSender, rec,
               msg.as_string())
 conn.quit()
-
-

@@ -100,7 +100,8 @@ att1["Content-Type"] = 'application/octet-stream'
 att1["Content-Disposition"] = 'attachment; filename="qrcode"'  # 这里的filename可以任意写，写什么名字，邮件中显示什么名字
 
 server = smtp
-conn = smtplib.SMTP(server)
+conn = smtplib.SMTP()
+conn.connect(server)
 #conn.starttls()
 user, password = (emailSender, emailPwd)
 conn.login(user, password)

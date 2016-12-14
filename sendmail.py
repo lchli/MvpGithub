@@ -89,6 +89,7 @@ r = requests.get(data['appQRCodeURL'], stream=True)
 with open(qrjpg, 'wb') as fd:
     for buf in r.iter_content(chunk_size=128):
         fd.write(buf)
+r.close()
 
 subprocess.call("echo ----------------------------sendEmail-----------------------------------------")
 # 创建一个带附件的实例

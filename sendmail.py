@@ -66,6 +66,7 @@ if isUpload != 'true':
     exit()
 
 print("----------------------------uploading-----------------------------------------")
+subprocess.call("echo ----------------------------uploading-----------------------------------------",shell=True)
 
 url = "http://www.pgyer.com/apiv1/app/upload"
 

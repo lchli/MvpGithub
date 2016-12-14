@@ -65,7 +65,6 @@ os.rename(srcApk, uploadApk)
 if isUpload != 'true':
     exit()
 
-print("----------------------------uploading-----------------------------------------")
 subprocess.call("echo ----------------------------uploading-----------------------------------------",shell=True)
 
 url = "http://www.pgyer.com/apiv1/app/upload"
@@ -91,8 +90,7 @@ with open(qrjpg, 'wb') as fd:
     for buf in r.iter_content(chunk_size=128):
         fd.write(buf)
 
-
-print("----------------------------sendEmail-----------------------------------------")
+subprocess.call("echo ----------------------------sendEmail-----------------------------------------")
 # 创建一个带附件的实例
 msg = MIMEMultipart()
 
@@ -103,7 +101,7 @@ att1["Content-Disposition"] = 'attachment; filename="qrcode"'  # 这里的filena
 
 server = smtp
 conn = smtplib.SMTP(server)
-conn.starttls()
+#conn.starttls()
 user, password = (emailSender, emailPwd)
 conn.login(user, password)
 

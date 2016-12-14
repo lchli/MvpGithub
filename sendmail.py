@@ -66,7 +66,9 @@ os.rename(srcApk, uploadApk)
 
 if isUpload != 'true':
     exit()
-# -----------------Upload---------------------------------------------
+
+print("----------------------------uploading-----------------------------------------")
+
 url = "http://www.pgyer.com/apiv1/app/upload"
 
 data = {
@@ -85,9 +87,14 @@ if response['code'] != 0:
 
 data = response['data']
 qrjpg = "qr.jpg"
-urllib.urlretrieve(data['appQRCodeURL'], qrjpg)
 
-# -----------------sendEmail---------------------------------------------
+r = requests.get(data['appQRCodeURL'], stream=True)
+with open(qrjpg, 'wb') as fd:
+    for buf in r.iter_content(chunk_size=128):
+        fd.write(buf)
+
+
+print("----------------------------sendEmail-----------------------------------------")
 # 创建一个带附件的实例
 msg = MIMEMultipart()
 

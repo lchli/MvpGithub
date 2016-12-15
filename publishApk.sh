@@ -120,6 +120,8 @@ gradle clean assemble${type}
 
 renameApk
 
+cd ..
+
 
 if [ ${isUpload} == "true" ]
 then

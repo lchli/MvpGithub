@@ -123,6 +123,6 @@ renameApk
 
 if [ ${isUpload} == "true" ]
 then
-jave -jar ApkUploadUtil.jar ${apiKey} ${uKey} ${emailSender} ${emailPwd} ${emailReceivers} ${smtp} ${uploadApk} ${isSendEmail}
+java -jar ApkUploadUtil.jar ${apiKey} ${uKey} ${emailSender} ${emailPwd} ${emailReceivers} ${smtp} ${uploadApk} ${isSendEmail}
 fi
 

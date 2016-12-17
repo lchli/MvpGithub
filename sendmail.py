@@ -37,6 +37,8 @@ smtp = args.smtp
 isSendEmail = args.isSendEmail
 uploadApk = args.uploadApk
 
+
+os.print("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
 subprocess.call("echo ----------------------------uploading-----------------------------------------", shell=True)
 
 url = "http://www.pgyer.com/apiv1/app/upload"
@@ -94,7 +96,7 @@ imgMsg.add_header('Content-ID', '<image1>')
 msg.attach(textMsg)
 msg.attach(imgMsg)
 
-msg['Subject'] = "【{0}】上传成功！。".format(data['appName'])
+msg['Subject'] = "【{0}】上传成功！".format(data['appName'])
 msg['From'] = sender
 msg['To'] = receives
 

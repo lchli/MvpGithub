@@ -50,7 +50,7 @@ renameApk
 
 if [ ${isUpload} == "true" ]
 then
-../sendmail.py -apiKey "${apiKey}" -uKey "${uKey}" -emailSender "${emailSender}" \
+../uploadApk.py -apiKey "${apiKey}" -uKey "${uKey}" -emailSender "${emailSender}" \
 -emailPwd "${emailPwd}" -emailReceivers "${emailReceivers}" -smtp "${smtp}" \
 -uploadApk "${uploadApk}" -isSendEmail "${isSendEmail}"
 fi

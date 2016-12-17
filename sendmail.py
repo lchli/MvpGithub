@@ -37,8 +37,8 @@ smtp = args.smtp
 isSendEmail = args.isSendEmail
 uploadApk = args.uploadApk
 
+sys.stdout.write('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhh'+'\n')
 
-os.print("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
 subprocess.call("echo ----------------------------uploading-----------------------------------------", shell=True)
 
 url = "http://www.pgyer.com/apiv1/app/upload"

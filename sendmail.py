@@ -6,6 +6,7 @@ import json
 from email.mime.text import MIMEText
 from email.header import Header
 from email.mime.multipart import MIMEMultipart
+from email.mime.image import MIMEImage
 import argparse
 import urllib
 import time
@@ -52,7 +53,7 @@ print(response)
 if response['code'] != 0:
     print("upload fail:" + response['message'])
     exit()
-print("apk上传成功******************************************************")
+subprocess.call("echo ----------------------------apk上传成功-----------------------------------------", shell=True)
 
 if isSendEmail != 'true':
     print("All Finished*******no need to send email.***********************************************")

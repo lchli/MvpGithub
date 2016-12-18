@@ -25,8 +25,6 @@ parser.add_argument("-smtp", "--smtp", type=str, help="the response")
 parser.add_argument("-uploadApk", "--uploadApk", type=str, help="the response")
 parser.add_argument("-isSendEmail", "--isSendEmail", type=str, help="the response")
 
-parser.add_argument("-json", "--json", type=str, help="the response")
-
 args = parser.parse_args()
 print(args)
 
@@ -38,9 +36,6 @@ emailReceivers = args.emailReceivers
 smtp = args.smtp
 isSendEmail = args.isSendEmail
 uploadApk = args.uploadApk
-
-json = args.json
-print(json)
 
 subprocess.call("echo ----------------------------uploading-----------------------------------------", shell=True)
 
@@ -79,17 +74,16 @@ server = smtp
 user, password = (emailSender, emailPwd)
 
 sender = emailSender
-receives = emailReceivers
+receives = emailReceivers.replace(",", ", ")
 
-# 创建一个带附件的实例
 msg = MIMEMultipart()
 
 textMsg = MIMEText('应用名称：<br>{0}<br>应用版本：<br>{1}<br>应用版本号：<br>{2}<br>'
-                   '<p><img src="cid:image1"></p>'.format(data['appName'],data['appVersion'], data['appVersionNo']),
+                   '<p><img src="cid:image1"></p>'.format(data['appName'], data['appVersion'], data['appVersionNo']),
                    'html',
                    'utf-8')
 
-# 指定图片为当前目录
+# 图片消息。
 img = open(qrjpg, 'rb')
 imgMsg = MIMEImage(img.read())
 img.close()

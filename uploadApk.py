@@ -25,6 +25,8 @@ parser.add_argument("-smtp", "--smtp", type=str, help="the response")
 parser.add_argument("-uploadApk", "--uploadApk", type=str, help="the response")
 parser.add_argument("-isSendEmail", "--isSendEmail", type=str, help="the response")
 
+parser.add_argument("-json", "--json", type=str, help="the response")
+
 args = parser.parse_args()
 print(args)
 
@@ -36,6 +38,9 @@ emailReceivers = args.emailReceivers
 smtp = args.smtp
 isSendEmail = args.isSendEmail
 uploadApk = args.uploadApk
+
+json = args.json
+print(json)
 
 subprocess.call("echo ----------------------------uploading-----------------------------------------", shell=True)
 

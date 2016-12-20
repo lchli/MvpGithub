@@ -22,6 +22,9 @@ public class SearchReposAdapter extends AbsAdapter<ReposResponse.Repo> {
   @Override
   public void onBindViewHolder(AbsViewHolder holder, int position) {
     final ReposResponse.Repo repo = getItem(position);
+    if (repo == null) {
+      return;
+    }
     ViewHolder vh = (ViewHolder) holder;
     vh.repoFullNameTextView.setText(repo.fullName + "");
     vh.repoDesTextView.setText(repo.description + "");

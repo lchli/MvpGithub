@@ -408,6 +408,9 @@ public final class Preconditions {
   // Note that this is somewhat-improperly used from Verify.java as well.
   static String format(@Nullable String template, @Nullable Object... args) {
     template = String.valueOf(template); // null -> "null"
+    if(args==null){
+      return template;
+    }
 
     // start substituting the arguments into the '%s' placeholders
     StringBuilder builder = new StringBuilder(template.length() + 16 * args.length);

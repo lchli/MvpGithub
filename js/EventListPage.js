@@ -13,11 +13,12 @@ import {
   View,
   ListView,
   Button,
-   Image
+   Image,
+    Navigator, TouchableHighlight
 } from 'react-native';
 
 
-export default class AweProject extends Component {
+export default class EventListPage extends Component {
 
 
 
@@ -41,7 +42,7 @@ constructor(props) {
     }
 
   componentWillUnmount() {
-       
+
     }
 
 //get data source.
@@ -73,26 +74,35 @@ onSearchChange=()=>{
 renderRow=(jobj)=>{
 
   return (
+       <TouchableHighlight onPress={() => {
+
+            this.props.navigator.push({ title: 'detail', index: 1 });
+
+        }}>
+
     <View>
      <Text>{jobj.created_at}</Text>
     <Text>{jobj.actor.login}</Text>
      <Text>{jobj.repo.name}</Text>
-    <Image source={{uri: jobj.actor.avatar_url}} style={{width: 40, height: 40}} />
+    <Image source={{uri: jobj.actor.avatar_url}} style={{width: 40, height: 40}}/>
     </View>
+
+             </TouchableHighlight>
     )
-    
+
 }
 
 
 
   render() {
-    let that=this;
     return (
-      <View style={styles.container}>
-       
+      <View >
+
         <ListView
                 dataSource={this.state.dataSource}
                 renderRow={(e)=>this.renderRow(e)}
+
+
               />
       </View>
     );
@@ -118,4 +128,3 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('AweProject', () => AweProject);

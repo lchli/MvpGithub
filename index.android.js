@@ -13,98 +13,57 @@ import {
   View,
   ListView,
   Button,
-   Image
+   Image,
+    Navigator, TouchableHighlight
 } from 'react-native';
+
+import EventListPage from './js/EventListPage.js'
+import EventDetailPage from './js/EventDetailPage.js'
 
 
 export default class AweProject extends Component {
 
-
-
 constructor(props) {
     super(props);
-   const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
-      this.state = {
-      dataSource: ds.cloneWithRows([]),
-      dss:ds
-
-
-      };
-
-
-
-  }
-
-  componentDidMount() {
-        this.onSearchChange();
+    this.routes=[{title: 'list', index: 0},{title: 'detail', index: 1}];
     }
 
-  componentWillUnmount() {
-       
-    }
-
-//get data source.
- getDataSource2(movies) {
-        return this.state.dss.cloneWithRows(movies);
-    }
-
-
-onSearchChange=()=>{
-
-  fetch('https://api.github.com/events')
-      .then((response) => response.json())
-      .then((responseJson) => {
-
-  this.setState({
-
-                 dataSource: this.getDataSource2(responseJson)
-             });
-
-
-        return responseJson;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-
-
-renderRow=(jobj)=>{
-
-  return (
-    <View>
-     <Text>{jobj.created_at}</Text>
-    <Text>{jobj.actor.login}</Text>
-     <Text>{jobj.repo.name}</Text>
-    <Image source={{uri: jobj.actor.avatar_url}} style={{width: 40, height: 40}}/>
-    </View>
-    )
-    
-}
-
-
-
-  render() {
-    let that=this;
+ render() {
     return (
-      <View style={styles.container}>
-       
-        <ListView
-                dataSource={this.state.dataSource}
-                renderRow={(e)=>this.renderRow(e)}
-              />
-      </View>
+      <Navigator
+        initialRoute={this.routes[0]}
+
+        renderScene={this.renderNav}
+
+         configureScene={(route, routeStack) =>
+           Navigator.SceneConfigs.PushFromRight}
+
+           initialRouteStack={this.routes}
+
+      />
     );
   }
+
+renderNav=(route,nav) => {
+        switch (route.index) {
+          case 0:
+            return <EventListPage navigator={nav} title="list" style={styles.container} />
+            case 1:
+                 return <EventDetailPage navigator={nav} title="detail" style={styles.container} />
+            default:
+                return null;
+        }
+    }
+
 }
+AppRegistry.registerComponent('AweProject', () => AweProject);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: '#abcdef',
+    backgroundColor: '#ffffff',
   },
   welcome: {
     fontSize: 20,
@@ -117,5 +76,3 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
-
-AppRegistry.registerComponent('AweProject', () => AweProject);

@@ -132,6 +132,9 @@ dependencies {
     compile domainDependencies."glide"
     compile domainDependencies."react-native"
 
+    compile project(':AnNote:StudyDiscuss:app')
+
+
 
 }
 

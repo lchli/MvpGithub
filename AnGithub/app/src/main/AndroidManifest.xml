@@ -14,13 +14,13 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        tools:replace="android:icon"
+        android:theme="@style/Github_AppTheme"
+        tools:replace="android:icon,android:theme"
         >
         <activity
             android:name=".features.home.HomeActivity"
             android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/Github_AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,14 +29,14 @@
         </activity>
         <activity
             android:name=".features.search.view.SearchActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/Github_AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/Github_AppTheme.NoActionBar"
             android:name=".features.me.views.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
-            android:theme="@style/AppTheme"
+            android:theme="@style/Github_AppTheme"
             android:name=".features.webview.WebviewActivity"
             android:label="@string/title_activity_webview" />
 

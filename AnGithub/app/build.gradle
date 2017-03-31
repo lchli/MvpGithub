@@ -38,13 +38,13 @@ apply from: '../buildSystem/globalValue.gradle'
 apply plugin: 'android-apt'
 
 android {
-    compileSdkVersion project.ext.compileSdkVersion
-    buildToolsVersion project.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "com.lchli.angithub"
-        minSdkVersion project.ext.minSdkVersion
-        targetSdkVersion project.ext.targetSdkVersion
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode project.ext.versionCode
         versionName project.ext.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -133,6 +133,7 @@ dependencies {
     compile domainDependencies."react-native"
 
     compile project(':AnNote:StudyDiscuss:app')
+    compile project(':ModuleAccessInterfaces')
 
 
 

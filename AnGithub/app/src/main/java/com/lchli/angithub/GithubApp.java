@@ -2,6 +2,7 @@ package com.lchli.angithub;
 
 import android.app.Application;
 
+import com.api.ApiManager;
 import com.apkfuns.logutils.LogUtils;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
@@ -32,6 +33,8 @@ public class GithubApp extends Application implements ReactApplication {
     Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
 
     registerReactInstanceEventListener();
+    //
+    ApiManager.newAnNoteApi().onAppCreate(this);
 
   }
 

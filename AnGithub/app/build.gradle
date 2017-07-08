@@ -10,6 +10,7 @@ buildscript {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+        classpath 'com.android.tools.build:gradle:2.3.0'
     }
 }
 
@@ -31,6 +32,12 @@ allprojects {
 }
 
 
+rootProject.ext {
+    compileSdkVersion = 25
+    buildToolsVersion = "25.0.2"
+    minSdkVersion = 16
+    targetSdkVersion = 25
+}
 
 apply plugin: 'com.android.application'
 apply from: '../buildSystem/dependencies.gradle'
@@ -106,12 +113,12 @@ dependencies {
     def domainDependencies = project.ext.domainDependencies
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //test.
-    androidTestCompile(androidTestDependencies.espresso, {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+//    androidTestCompile(androidTestDependencies.espresso, {
+//        exclude group: 'com.android.support', module: 'support-annotations'
+//    })
     compile testDependencies.junit
-    testCompile testDependencies.mockito
-    testCompile testDependencies.robolectric
+    //testCompile testDependencies.mockito
+    //testCompile testDependencies.robolectric
     //support.
     compile domainDependencies.appcompatv7
     compile domainDependencies.design
@@ -132,8 +139,7 @@ dependencies {
     compile domainDependencies."glide"
     compile domainDependencies."react-native"
 
-    compile project(':AnNote:StudyDiscuss:app')
-    compile project(':ModuleAccessInterfaces')
+    
 
 
 

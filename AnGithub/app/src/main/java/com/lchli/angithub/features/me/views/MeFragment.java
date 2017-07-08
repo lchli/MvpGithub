@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.api.ApiManager;
 import com.bumptech.glide.Glide;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
@@ -114,7 +113,7 @@ public class MeFragment extends ViewPagerFragment {
     logoutWidget.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        ApiManager.newAnNoteApi().launch(getActivity());
+
       }
     });
 
